@@ -1,0 +1,62 @@
+{
+	"sec": {
+		"prefix": "sec",
+		"body": [
+			"-- ===",
+			"-- === ${0}",
+			"-- ==="
+		],
+		"description": "Section comment"
+	},
+	"github": {
+		"prefix": "github",
+		"body": [
+			"\"https:\/\/github.com\/${0}\","
+		],
+		"description": "Github url"
+	},
+	"nvpack": {
+		"prefix": "nvpack",
+		"body": [
+			"-- === ${1:插件描述} ===",
+			"if vim.g.vscode then return end",
+			"",
+			"local P = {",
+			"\tname = \"${2:<++>}\", -- 仓库名",
+			"\tmodule = \"${3:<++>}\", -- require模块名",
+			"\tdeps = { ${4} },",
+			"\tbuild_cmd = ${5:nil},",
+			"}",
+			"",
+			"${6}-- 注册构建监听器",
+			"PackUtils.setup_listener(P.name, P.build_cmd)",
+			"",
+			"-- 懒加载触发器",
+			"vim.api.nvim_create_autocmd({",
+			"\t${7}-- \"InsertEnter\", \"CmdlineEnter\", -- 补全/命令行",
+			"\t-- \"BufReadPost\", \"BufNewFile\",   -- 界面/语法类",
+			"\t-- \"LspAttach\",                  -- LSP 相关",
+			"\t-- \"FileType\",                   -- 确定文件类型",
+			"\t-- \"VimEnter\",                   -- 核心初始化完成",
+			"\t-- \"UIEnter\",                   -- vim.schedule(function()",
+			"}, {",
+			"\tcallback = function()",
+			"\t\tPackUtils.load(P, function(plugin)",
+			"\t\t\tplugin.setup({",
+			"\t\t\t\t$8",
+			"\t\t\t})",
+			"\t\tend)",
+			"\tend",
+			"})",
+			"-- vim.keymap.set({ \"n\", \"v\" }, \"${9:<++>}\", function()",
+			"-- \tPackUtils.load(P, function(plugin)",
+			"-- \t\tplugin.setup({",
+			"-- \t\t\t$10",
+			"-- \t\t})",
+			"-- \tend)",
+			"-- \tvim.cmd(\"${11:Command}\")",
+			"-- end, { desc = \"${0:描述}\" })"
+		],
+		"description": "Neovim Native Package Loader (Pure Config)"
+	}
+}

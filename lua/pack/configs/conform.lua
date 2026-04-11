@@ -1,0 +1,61 @@
+-- === 代码格式化 (conform.nvim) ===
+if vim.g.vscode then return end
+
+local P = {
+	name = "conform.nvim",
+	module = "conform",
+	deps = {
+		"mason.nvim",
+		"mason-registry",
+	},
+}
+
+-- 提取出统一的配置变量
+local formatters_by_ft = {
+	python = { "isort", "black" },
+	rust = { "rust-analyzer", lsp_format = "fallback" },
+	toml = { "templ" },
+	html = { "djlint" },
+	sh = { "shfmt" },
+	zsh = { "shfmt" },
+}
+
+
+-- 辅助函数：从指定文件类型的配置中提取所有工具名称（去重）
+local function get_ensure_installed_for_ft(ft, ft_table)
+	local tools = {}
+	local cfg = ft_table[ft]
+	if type(cfg) == "table" then
+		for _, item in ipairs(cfg) do
+			if type(item) == "string" then
+				tools[item] = true
+			end
+		end
+	elseif type(cfg) == "string" then
+		tools[cfg] = true
+	end
+	local list = {}
+	for tool, _ in pairs(tools) do
+		table.insert(list, tool)
+	end
+	return list
+end
+
+-- 快捷键纯懒加载：只在按下快捷键时激活
+vim.keymap.set({ "n", "v" }, "<leader>f", function()
+	PackUtils.load(P, function(plugin)
+		plugin.setup({ -- At a minimum, you will need to set up some formatters by filetype
+			formatters_by_ft = formatters_by_ft
+		})
+	end)
+	local registry = require("mason-registry")
+	local ft = vim.bo.filetype
+	local tools = get_ensure_installed_for_ft(ft, formatters_by_ft)
+	for _, tool in ipairs(tools) do
+		if not registry.is_installed(tool) then
+			vim.notify("Installing formatter: " .. tool, vim.log.levels.INFO)
+			registry.get_package(tool):install()
+		end
+	end
+	require("conform").format({ async = true, lsp_fallback = true })
+end, { desc = "格式化代码（检测安装缺失工具）" })
