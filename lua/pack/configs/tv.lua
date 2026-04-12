@@ -30,6 +30,10 @@ local function load_plugin()
 			},
 		})
 	end)
+	-- 提前触发 BufReadPost 的事件钩子，让 LSP 悄悄在后台 require 完毕
+	vim.schedule(function()
+		vim.api.nvim_exec_autocmds("BufReadPost", { modeline = false })
+	end)
 end
 
 vim.keymap.set({ "n", "v" }, "<c-t>", function()

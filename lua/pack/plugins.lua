@@ -18,6 +18,9 @@ local specs = {
 	'https://github.com/nvim-treesitter/nvim-treesitter',
 	-- indentblankline.lua 彩虹缩进
 	"https://github.com/lukas-reineke/indent-blankline.nvim",
+	-- ufo.lua 折叠插件
+	"https://github.com/kevinhwang91/nvim-ufo",
+	"https://github.com/kevinhwang91/promise-async",
 	-- conform.lua 格式化工具formatter
 	"https://github.com/stevearc/conform.nvim",
 	-- kommentary.lua 注释插件
@@ -156,6 +159,7 @@ end
 
 -- [动态路径] 获取插件根目录
 function PackUtils.get_root(name)
+	name = PackUtils.get_name(name)
 	local paths = vim.api.nvim_get_runtime_file("pack/*/*/" .. name, true)
 	if #paths > 0 then return paths[1] end
 	local glob = vim.fn.globpath(vim.o.packpath, "pack/*/*/" .. name, 0, 1)
@@ -164,6 +168,7 @@ end
 
 -- [构建执行] 执行编译任务
 function PackUtils.run_build(name, build_cmd)
+	name = PackUtils.get_name(name)
 	if PackUtils.disabled_plugins[name] then return end
 	if not build_cmd or PackUtils.is_building[name] then return end
 	local path = PackUtils.get_root(name)
@@ -227,6 +232,7 @@ end
 
 -- [监听器] 注册安装/更新监听
 function PackUtils.setup_listener(name, build_cmd)
+	name = PackUtils.get_name(name)
 	if PackUtils.disabled_plugins[name] then return end
 	if not build_cmd then return end
 	vim.api.nvim_create_autocmd('PackChanged', {
@@ -243,6 +249,7 @@ end
 
 -- [健康检查] 如果没标记且有构建命令，则触发构建
 function PackUtils.check_health(name, build_cmd)
+	name = PackUtils.get_name(name)
 	if PackUtils.disabled_plugins[name] then return end
 	if not build_cmd then return end
 	local path = PackUtils.get_root(name)
@@ -256,6 +263,12 @@ end
 
 -- 全方位防崩加载引擎
 function PackUtils.load(P, config_fn)
+	P.name = PackUtils.get_name(P.name)
+	if P.deps then
+		for i, dep in ipairs(P.deps) do
+			P.deps[i] = PackUtils.get_name(dep)
+		end
+	end
 	if PackUtils.disabled_plugins[P.name] then return end
 	if PackUtils.is_initialized[P.name] then return end
 	PackUtils.check_health(P.name, P.build_cmd)
