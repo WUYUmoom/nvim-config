@@ -38,6 +38,8 @@ local specs = {
 	'https://github.com/akinsho/bufferline.nvim',
 	-- yazi.lua 文件管理器
 	'https://github.com/mikavilpas/yazi.nvim',
+	-- sudo权限保存文件
+	"https://github.com/lambdalisue/vim-suda",
 	-- 查看可用键位
 	"https://github.com/folke/which-key.nvim",
 }

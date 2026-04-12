@@ -273,6 +273,10 @@ mapkey("n", "<leader>cn", "gcc", { remap = true })
 mapkey("x", "<leader>cn", "gc", { remap = true })
 mapkey("n", "<leader>cu", "gcc", { remap = true })
 mapkey("x", "<leader>cu", "gc", { remap = true })
+mapkey("n", "<c-_>", "gcc", { remap = true })
+mapkey("x", "<c-_>", "gc", { remap = true })
+mapkey("n", "<c-/>", "gcc", { remap = true })
+mapkey("x", "<c-/>", "gc", { remap = true })
 
 -- ===
 -- ===  运行代码(该功能已经迁移到plugins/coderunner.lua)
