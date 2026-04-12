@@ -23,8 +23,6 @@ local specs = {
 	"https://github.com/kevinhwang91/promise-async",
 	-- conform.lua 格式化工具formatter
 	"https://github.com/stevearc/conform.nvim",
-	-- kommentary.lua 注释插件
-	"https://github.com/b3nj5m1n/kommentary",
 	-- noice.lua 取代消息、命令行和弹出菜单的 UI
 	"https://github.com/folke/noice.nvim",
 	"https://github.com/MunifTanjim/nui.nvim",

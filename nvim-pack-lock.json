@@ -28,10 +28,6 @@
       "rev": "11be32be3761c6263df2311afb6baa0de0863967",
       "src": "https://github.com/MysticalDevil/inlay-hints.nvim"
     },
-    "kommentary": {
-      "rev": "d5a111a3bc4109a8f913a5863c9092b3b3801482",
-      "src": "https://github.com/b3nj5m1n/kommentary"
-    },
     "mason-lspconfig.nvim": {
       "rev": "25f609e7fca78af7cede4f9fa3af8a94b1c4950b",
       "src": "https://github.com/williamboman/mason-lspconfig.nvim"

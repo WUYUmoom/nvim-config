@@ -2,8 +2,8 @@
 -- === map function
 -- ===
 
-local function mapkey(mode, lhs, rhs)
-	vim.keymap.set(mode, lhs, rhs, { silent = true, nowait = true })
+local function mapkey(mode, lhs, rhs, opts)
+    vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", { silent = true, nowait = true }, opts or {}))
 end
 
 local function mapcmd(key, cmd)
@@ -89,6 +89,8 @@ end
 maplua({ "x", "o", "n" }, "<CR>", smart_select("select_parent", 1), "扩大 Treesitter/LSP 范围")
 -- 缩小范围 (退格键)：不断向下寻找子节点
 maplua({ "x", "o" }, "<BS>", smart_select("select_child", -1), "缩小 Treesitter/LSP 范围")
+
+
 
 -- ===
 -- === Cursor Movement
@@ -181,13 +183,9 @@ mapkey("x", "<tab>", ">gv")
 -- === 批量替换
 -- ===
 
--- 设置快捷键，替换所有文件内容
-mapcmd("<leader>sa", "lua search_and_replace()")
--- 设置快捷键，替换当前文件内容
-mapcmd("<leader>sr", "lua search_and_replace_current_file()")
-
 -- 替换当前目录及子目录下所有文件内容
-function search_and_replace()
+local function search_and_replace()
+	return function ()
 	-- 获取用户输入的查找内容,使用 input() 函数动态输入替换内容
 	local search_text = vim.fn.input("Search for: ")
 
@@ -208,26 +206,32 @@ function search_and_replace()
 	else
 		print("Search or replace text cannot be empty.")
 	end
+	end
 end
 
 -- 替换当前文件内容
-function search_and_replace_current_file()
-	-- 获取用户输入的查找内容
-	local search_text = vim.fn.input("Search for in current file: ")
+local function search_and_replace_current_file()
+	return function()
+		-- 获取用户输入的查找内容
+		local search_text = vim.fn.input("Search for in current file: ")
 
-	-- 获取用户输入的替换内容
-	local replace_text = vim.fn.input("Replace with: ")
+		-- 获取用户输入的替换内容
+		local replace_text = vim.fn.input("Replace with: ")
 
-	-- 执行替换命令
-	if search_text ~= "" and replace_text ~= "" then
-		-- 使用 sed 替换当前文件中的匹配内容，并正确转义引号
-		local cmd = string.format("!sed -i 's/%s/%s/g' %%", search_text, replace_text)
-		vim.cmd(cmd)
-		print("Replaced all occurrences of '" .. search_text .. "' with '" .. replace_text .. "' in current file.")
-	else
-		print("Search or replace text cannot be empty.")
+		-- 执行替换命令
+		if search_text ~= "" and replace_text ~= "" then
+			-- 使用 sed 替换当前文件中的匹配内容，并正确转义引号
+			local cmd = string.format("!sed -i 's/%s/%s/g' %%", search_text, replace_text)
+			vim.cmd(cmd)
+			print("Replaced all occurrences of '" .. search_text .. "' with '" .. replace_text .. "' in current file.")
+		else
+			print("Search or replace text cannot be empty.")
+		end
 	end
 end
+
+maplua("n","<leader>sa",search_and_replace(), "替换当前目录及子目录下所有文件内容")
+maplua("n","<leader>sr",search_and_replace_current_file(), "替换当前文件内容")
 
 -- ===
 -- === 临时“存档”文件当前的版本，并与后续的修改进行 diff 对比
@@ -263,6 +267,12 @@ mapkey({ "n", "x", "o" }, "<LEADER><LEADER>", "<Esc>/<++><CR>:nohlsearch<CR>c4l"
 
 -- 拼写检查
 mapcmd("<LEADER>sc", "set spell!")
+
+-- 注释快捷键
+mapkey("n", "<leader>cn", "gcc", { remap = true })
+mapkey("x", "<leader>cn", "gc", { remap = true })
+mapkey("n", "<leader>cu", "gcc", { remap = true })
+mapkey("x", "<leader>cu", "gc", { remap = true })
 
 -- ===
 -- ===  运行代码(该功能已经迁移到plugins/coderunner.lua)
