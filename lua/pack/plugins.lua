@@ -102,7 +102,8 @@ end, {
 -- ==============================================================
 _G.PackUtils = {
 	is_building = {},     -- 记录各插件的构建状态，防止重复构建
-	is_initialized = {},  -- 统一在这里管理所有插件的初始化状态
+	is_initialized = {},  -- 记录具体的配置代码块是否已执行
+	plugin_loaded = {},   -- 记录插件是否已挂载 (避免重复 packadd)
 	disabled_plugins = {}, -- 专门记录被禁用的插件，供 load 拦截使用
 }
 
@@ -267,7 +268,13 @@ end
 
 -- 全方位防崩加载引擎
 function PackUtils.load(P, config_fn)
-	-- 自动纠错插件名和依赖名
+	-- 生成如 "lua/pack/configs/mini.lua:24" 这样绝对唯一的 call_id
+	local info = debug.getinfo(2, "Sl")
+	local call_id = (info.short_src or "unknown") .. ":" .. (info.currentline or 0)
+
+	-- 精准拦截：如果【这一行代码】已经成功执行过，直接跳过
+	if PackUtils.is_initialized[call_id] then return end
+
 	P.name = PackUtils.get_name(P.name)
 	if P.deps then
 		for i, dep in ipairs(P.deps) do
@@ -276,21 +283,24 @@ function PackUtils.load(P, config_fn)
 	end
 
 	if PackUtils.disabled_plugins[P.name] then return end
-	if PackUtils.is_initialized[P.name] then return end
-
-	-- 检查插件是否存在于磁盘，如果找不到，说明它正在后台被 vim.pack 异步克隆下载，直接静默退出
+	-- 磁盘中找不到，说明它正在异步克隆下载，直接静默退出
 	if not PackUtils.get_root(P.name) then return end
 
-	-- 走到这里，说明插件绝对在硬盘上了，执行常规准备工作
-	PackUtils.check_health(P.name, P.build_cmd)
-	pcall(vim.cmd.packadd, P.name)
-	if P.deps then
-		for _, dep in ipairs(P.deps) do
-			local dep_ok = pcall(vim.cmd.packadd, dep)
-			if not dep_ok then
-				vim.notify("Warning: " .. P.name .. " dependency[" .. dep .. "] missing", vim.log.levels.WARN)
+	-- 插件级操作：整个生命周期只需做一次的动作 (检查编译和挂载)
+	if not PackUtils.plugin_loaded[P.name] then
+		PackUtils.check_health(P.name, P.build_cmd)
+		pcall(vim.cmd.packadd, P.name)
+
+		if P.deps then
+			for _, dep in ipairs(P.deps) do
+				local dep_ok = pcall(vim.cmd.packadd, dep)
+				if not dep_ok then
+					vim.notify("Warning: " .. P.name .. " dependency[" .. dep .. "] missing", vim.log.levels.WARN)
+				end
 			end
 		end
+		-- 标记该仓库已挂载
+		PackUtils.plugin_loaded[P.name] = true
 	end
 
 	-- 保护 Setup 执行：自由地 require，如有拼写错误，这里的 pcall 会完美捕获并报错
@@ -302,8 +312,8 @@ function PackUtils.load(P, config_fn)
 		end
 	end
 
-	-- 只有全部流程走通，才标记为已初始化
-	PackUtils.is_initialized[P.name] = true
+	-- 标记【具体的代码块】已执行完毕
+	PackUtils.is_initialized[call_id] = true
 end
 
 -- ==============================================================

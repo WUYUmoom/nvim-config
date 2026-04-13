@@ -26,9 +26,9 @@ vim.api.nvim_create_autocmd({
 	end
 })
 
--- 懒加载触发器
+-- 不同的模块支持不同的懒加载策略
 -- vim.api.nvim_create_autocmd({
--- 	"InsertEnter", "CmdlineEnter", -- 补全/命令行
+-- 	"InsertEnter"
 -- }, {
 -- 	callback = function()
 -- 		PackUtils.load(P, function()
