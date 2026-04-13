@@ -14,6 +14,8 @@ local specs = {
 	'https://github.com/neovim/nvim-lspconfig',
 	'https://github.com/williamboman/mason-lspconfig.nvim',
 	'https://github.com/MysticalDevil/inlay-hints.nvim',
+	-- conform.lua 格式化工具formatter
+	"https://github.com/stevearc/conform.nvim",
 	-- treesitter.lua 需要安装tree-sitter-cli工具包
 	'https://github.com/nvim-treesitter/nvim-treesitter',
 	-- indentblankline.lua 彩虹缩进
@@ -21,8 +23,10 @@ local specs = {
 	-- ufo.lua 折叠插件
 	"https://github.com/kevinhwang91/nvim-ufo",
 	"https://github.com/kevinhwang91/promise-async",
-	-- conform.lua 格式化工具formatter
-	"https://github.com/stevearc/conform.nvim",
+	-- stickscroll.lua 代码函数名称浏览时固定
+	"https://github.com/nvim-treesitter/nvim-treesitter-context",
+	-- bufferline.lua 顶部状态栏
+	'https://github.com/akinsho/bufferline.nvim',
 	-- noice.lua 取代消息、命令行和弹出菜单的 UI
 	"https://github.com/folke/noice.nvim",
 	"https://github.com/MunifTanjim/nui.nvim",
@@ -38,8 +42,6 @@ local specs = {
 	'https://github.com/CRAG666/code_runner.nvim',
 	-- peek.lua 预览markdown
 	'https://github.com/cap153/peek.nvim',
-	-- bufferline.lua 顶部状态栏
-	'https://github.com/akinsho/bufferline.nvim',
 	-- yazi.lua 文件管理器
 	'https://github.com/mikavilpas/yazi.nvim',
 	-- sudo权限保存文件
