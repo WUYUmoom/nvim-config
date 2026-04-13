@@ -1,36 +1,34 @@
 if vim.g.vscode then return end
 
 local P = {
-    name = "peek.nvim",
-    module = "peek",
-    deps = {},
-    -- 编译命令：需要环境中安装了 deno
-    build_cmd = { "deno", "task", "--quiet", "build:fast" },
+	name = "peek.nvim",
+	-- 编译命令：需要环境中安装了 deno
+	build_cmd = { "deno", "task", "--quiet", "build:fast" },
 }
 
 PackUtils.setup_listener(P.name, P.build_cmd)
 
 -- 2. 封装加载逻辑
 local function load_peek()
-    PackUtils.load(P, function(plugin)
-        plugin.setup({
-					port = 9000,
-					app = { "zen", "-private-window" },
-					-- app = { "firefox-esr", "-private-window" },
-					-- app = { "google-chrome-stable", "--app=http://localhost:9000/?theme=dark", "--incognito" },
-        })
-    end)
+	PackUtils.load(P, function()
+		require("peek").setup({
+			port = 9000,
+			app = { "zen", "-private-window" },
+			-- app = { "firefox-esr", "-private-window" },
+			-- app = { "google-chrome-stable", "--app=http://localhost:9000/?theme=dark", "--incognito" },
+		})
+	end)
 end
 
 -- 在插件未加载时，这些命令就存在了。一旦被调用，它们会先加载插件，再执行真正的功能。
 vim.api.nvim_create_user_command("PeekOpen", function()
-    load_peek() -- 触发 PackUtils.load (包含构建检查)
-    require("peek").open()
+	load_peek() -- 触发 PackUtils.load (包含构建检查)
+	require("peek").open()
 end, { desc = "Lazy load and open Peek" })
 
 vim.api.nvim_create_user_command("PeekClose", function()
-    -- 如果插件没加载，Close 命令通常不需要做任何事，或者也触发加载
-    if PackUtils.is_initialized[P.name] then
-        require("peek").close()
-    end
+	-- 如果插件没加载，Close 命令通常不需要做任何事，或者也触发加载
+	if PackUtils.is_initialized[P.name] then
+		require("peek").close()
+	end
 end, { desc = "Close Peek" })

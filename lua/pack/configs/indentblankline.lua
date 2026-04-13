@@ -2,7 +2,6 @@
 
 local P = {
 	name = "indent-blankline.nvim", -- 仓库名
-	module = "ibl",                -- require模块名
 }
 
 -- 懒加载触发器
@@ -11,7 +10,7 @@ vim.api.nvim_create_autocmd({
 }, {
 	callback = function()
 		vim.schedule(function()
-			PackUtils.load(P, function(plugin)
+			PackUtils.load(P, function()
 				local highlight = {
 					"RainbowBlue",
 					"RainbowViolet",
@@ -33,7 +32,7 @@ vim.api.nvim_create_autocmd({
 					vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
 					vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
 				end)
-				plugin.setup({
+				require("ibl").setup({
 					indent = { highlight = highlight }
 				})
 			end)

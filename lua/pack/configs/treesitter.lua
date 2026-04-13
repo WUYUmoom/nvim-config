@@ -2,7 +2,6 @@ if vim.g.vscode then return end
 
 local P = {
 	name = "nvim-treesitter",
-	module = "nvim-treesitter",
 	build_cmd = ":TSUpdate",
 }
 

@@ -11,15 +11,14 @@ vim.g.loaded_netrwPlugin = 1
 
 local P = {
 	name = "yazi.nvim",
-	module = "yazi",
 	deps = { "plenary.nvim" },
 }
 
 -- 快捷键触发懒加载
 vim.keymap.set({ "n", "v" }, "tt", function()
 	-- 核心：直接调用引擎，把配置逻辑传进去
-	PackUtils.load(P, function(plugin)
-		plugin.setup({
+	PackUtils.load(P, function()
+	require("yazi").setup({
 			open_for_directories = false,
 			keymaps = { show_help = "<f1>" },
 		})

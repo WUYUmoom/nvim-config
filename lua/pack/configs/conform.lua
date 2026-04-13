@@ -3,7 +3,6 @@ if vim.g.vscode then return end
 
 local P = {
 	name = "conform.nvim",
-	module = "conform",
 	deps = {
 		"mason.nvim",
 		"mason-registry",
@@ -43,8 +42,8 @@ end
 
 -- 快捷键纯懒加载：只在按下快捷键时激活
 vim.keymap.set({ "n", "v" }, "<leader>f", function()
-	PackUtils.load(P, function(plugin)
-		plugin.setup({ -- At a minimum, you will need to set up some formatters by filetype
+	PackUtils.load(P, function()
+		require("conform").setup({ -- At a minimum, you will need to set up some formatters by filetype
 			formatters_by_ft = formatters_by_ft
 		})
 	end)

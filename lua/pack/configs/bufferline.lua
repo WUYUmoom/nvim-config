@@ -9,7 +9,6 @@ if vim.g.vscode then return end
 
 local P = {
 	name = "bufferline.nvim",
-	module = "bufferline",
 	deps = { "nvim-web-devicons" },   -- 确保图标库先加载
 }
 
@@ -17,7 +16,7 @@ local P = {
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 	once = true,
 	callback = function()
-		PackUtils.load(P, function(plugin)
+		PackUtils.load(P, function()
 			-- 在缓冲区之间移动
 			map:cmd('tn', 'BufferLineCyclePrev')
 			map:cmd('ti', 'BufferLineCycleNext')
@@ -30,7 +29,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 			map:cmd('tN', 'BufferLineCloseLeft')
 			map:cmd('tI', 'BufferLineCloseRight')
 			map:cmd('tQ', 'BufferLineCloseOthers')
-			plugin.setup({
+			require("bufferline").setup({
 				options = {
 					modified_icon = "",
 					buffer_close_icon = "×",

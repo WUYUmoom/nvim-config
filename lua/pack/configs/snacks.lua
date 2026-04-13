@@ -3,11 +3,10 @@ if vim.g.vscode then return end
 
 local P = {
 	name = "snacks.nvim",
-	module = "snacks",
 }
 
-PackUtils.load(P, function(plugin)
-	plugin.setup({
+PackUtils.load(P, function()
+	require("snacks").setup({
 		image = {},
 		lazygit = {},
 		notifier = {}, -- 替代了folke/noice.nvim插件的rcarriga/nvim-notify依赖

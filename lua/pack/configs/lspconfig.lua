@@ -13,7 +13,6 @@ end
 -- 2. 插件配置清单
 local P = {
 	name = "nvim-lspconfig",
-	module = "lspconfig",
 	deps = { "mason.nvim", "mason-lspconfig.nvim", "inlay-hints.nvim" },
 }
 

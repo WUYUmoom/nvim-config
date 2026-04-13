@@ -3,13 +3,12 @@ if vim.g.vscode then return end
 
 local P = {
 	name = "tv.nvim", -- 仓库名
-	module = "tv",   -- require模块名
 }
 
 local function load_plugin()
-	PackUtils.load(P, function(plugin)
-		local h = plugin.handlers
-		plugin.setup({
+	PackUtils.load(P, function()
+		local h = require("tv").handlers
+		require("tv").setup({
 			channels = {
 				["git-files"] = {
 					handlers = {

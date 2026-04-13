@@ -3,7 +3,6 @@ if vim.g.vscode then return end
 
 local P = {
 	name = "blink.cmp",
-	module = "blink.cmp",
 	deps = { "friendly-snippets" },
 	-- build_cmd = "cargo build --release",
 }
@@ -14,8 +13,8 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter", "LspAttach" }, {
 	once = true,
 	callback = function()
 		-- 调用引擎的 load 方法，把 setup 逻辑作为匿名函数传进去
-		PackUtils.load(P, function(plugin)
-			plugin.setup({
+		PackUtils.load(P, function()
+			require("blink.cmp").setup({
 				fuzzy = {
 					prebuilt_binaries = {
 						force_version = 'v*',

@@ -9,7 +9,6 @@ vim.o.foldenable = true
 
 local P = {
 	name = "nvim-ufo", -- 仓库名
-	module = "ufo",   -- require模块名
 	deps = { "promise-async" },
 }
 
@@ -19,7 +18,7 @@ vim.api.nvim_create_autocmd({
 }, {
 	callback = function()
 		vim.schedule(function()
-			PackUtils.load(P, function(plugin)
+			PackUtils.load(P, function()
 				-- Option 2: nvim lsp as LSP client
 				local capabilities = vim.lsp.protocol.make_client_capabilities()
 				capabilities.textDocument.foldingRange = {
@@ -32,9 +31,9 @@ vim.api.nvim_create_autocmd({
 						capabilities = capabilities,
 					})
 				end
-				plugin.setup({})
+				require("ufo").setup({})
 				-- Option 3: treesitter as a main provider instead
-				-- plugin.setup({
+				-- require("ufo").setup({
 				-- 	provider_selector = function()
 				-- 		return { "treesitter", "indent" }
 				-- 	end

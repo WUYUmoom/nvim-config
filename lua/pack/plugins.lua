@@ -28,6 +28,10 @@ local specs = {
 	"https://github.com/MunifTanjim/nui.nvim",
 	-- snacks.lua 图片预览、lazygit、lsp_references模糊查找
 	"https://github.com/folke/snacks.nvim",
+	-- mini.lua 各种对字符的surround包裹{} [] ''
+	"https://github.com/echasnovski/mini.nvim",
+	-- autopairs.lua 对字符自动补全另一半
+	"https://github.com/windwp/nvim-autopairs",
 	-- tv.lua 模糊查找television
 	"https://github.com/alexpasmantier/tv.nvim",
 	-- coderunner.lua 运行代码
@@ -263,45 +267,37 @@ end
 
 -- 全方位防崩加载引擎
 function PackUtils.load(P, config_fn)
+	-- 自动纠错插件名和依赖名
 	P.name = PackUtils.get_name(P.name)
 	if P.deps then
 		for i, dep in ipairs(P.deps) do
 			P.deps[i] = PackUtils.get_name(dep)
 		end
 	end
+
 	if PackUtils.disabled_plugins[P.name] then return end
 	if PackUtils.is_initialized[P.name] then return end
+
+	-- 检查插件是否存在于磁盘，如果找不到，说明它正在后台被 vim.pack 异步克隆下载，直接静默退出
+	if not PackUtils.get_root(P.name) then return end
+
+	-- 走到这里，说明插件绝对在硬盘上了，执行常规准备工作
 	PackUtils.check_health(P.name, P.build_cmd)
-
-	-- 强制将主插件挂载到 runtimepath
 	pcall(vim.cmd.packadd, P.name)
-
-	-- 保护依赖加载 (防止 dependencies 里的插件没下载)
 	if P.deps then
 		for _, dep in ipairs(P.deps) do
 			local dep_ok = pcall(vim.cmd.packadd, dep)
 			if not dep_ok then
-				vim.notify("Warning: " .. P.name .. " dependency [" .. dep .. "] missing", vim.log.levels.WARN)
+				vim.notify("Warning: " .. P.name .. " dependency[" .. dep .. "] missing", vim.log.levels.WARN)
 			end
 		end
 	end
 
-	-- 保护 require (防止插件文件夹还没下载完)
-	local req_ok, plugin = pcall(require, P.module)
-	-- 如果失败，说明插件还没下载好或者路径不对，优雅退出
-	if not req_ok then
-		-- 经过上面强制挂载后还是失败，且硬盘上确实有这个文件夹，那绝对是 module 填错了
-		if PackUtils.get_root(P.name) then
-			vim.notify("Error: Plugin [" .. P.name .. "] module not found", vim.log.levels.ERROR)
-		end
-		return
-	end
-
-	-- 保护 Setup 执行：使用 pcall 包裹传进来的匿名函数，防止 setup 里的参数写错导致崩溃
+	-- 保护 Setup 执行：自由地 require，如有拼写错误，这里的 pcall 会完美捕获并报错
 	if config_fn then
-		local setup_ok, err = pcall(config_fn, plugin)
+		local setup_ok, err = pcall(config_fn)
 		if not setup_ok then
-			vim.notify("Error: " .. P.name .. " setup failed: " .. tostring(err), vim.log.levels.ERROR)
+			vim.notify("Error: " .. P.name .. " setup failed: \n" .. tostring(err), vim.log.levels.ERROR)
 			return
 		end
 	end
