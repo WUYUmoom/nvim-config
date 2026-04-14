@@ -15,12 +15,13 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter", "LspAttach" }, {
 		-- 调用引擎的 load 方法，把 setup 逻辑作为匿名函数传进去
 		PackUtils.load(P, function()
 			require("blink.cmp").setup({
-				fuzzy = {
+				fuzzy = { -- 下载预编译的Fuzzy以节省空间
 					prebuilt_binaries = {
 						force_version = 'v*',
 					},
 				},
 				cmdline = {
+					-- 默认的cmdline回车按下执行命令
 					-- keymap = { ["<CR>"] = { "select_and_accept", "fallback" } },
 					completion = {
 						list = { selection = { preselect = false, auto_insert = true } },

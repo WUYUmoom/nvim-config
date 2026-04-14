@@ -8,8 +8,8 @@ local P = {
 
 PackUtils.setup_listener(P.name, P.build_cmd)
 
--- 2. 封装加载逻辑
-local function load_peek()
+-- 在插件未加载时，这些命令就存在了。一旦被调用，它们会先加载插件，再执行真正的功能。
+vim.api.nvim_create_user_command("PeekOpen", function()
 	PackUtils.load(P, function()
 		require("peek").setup({
 			port = 9000,
@@ -18,11 +18,6 @@ local function load_peek()
 			-- app = { "google-chrome-stable", "--app=http://localhost:9000/?theme=dark", "--incognito" },
 		})
 	end)
-end
-
--- 在插件未加载时，这些命令就存在了。一旦被调用，它们会先加载插件，再执行真正的功能。
-vim.api.nvim_create_user_command("PeekOpen", function()
-	load_peek() -- 触发 PackUtils.load (包含构建检查)
 	require("peek").open()
 end, { desc = "Lazy load and open Peek" })
 

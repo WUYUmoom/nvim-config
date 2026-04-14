@@ -48,6 +48,8 @@ local specs = {
 	'https://github.com/cap153/peek.nvim',
 	-- yazi.lua 文件管理器
 	'https://github.com/mikavilpas/yazi.nvim',
+	-- translate.lua 快捷键翻译
+	"https://github.com/uga-rosa/translate.nvim",
 	-- sudo权限保存文件
 	"https://github.com/lambdalisue/vim-suda",
 	-- 查看可用键位
@@ -89,7 +91,7 @@ vim.api.nvim_create_user_command("PackUpdate", function(opts)
 	vim.pack.update(targets)
 end, {
 	nargs = "*",                -- 支持 0 到多个参数
-	complete = get_plugin_names, -- 绑定补全函数
+	complete = get_plugin_names, -- 绑定补全函数，可以改用'packadd'不过补全列表会有一些非vim.pack管理的插件
 	desc = "Update specified or all plugins",
 })
 

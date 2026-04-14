@@ -100,6 +100,10 @@
       "rev": "ad9ede6a9cddf16cedbd31b8932d6dcdee9b716e",
       "src": "https://github.com/folke/snacks.nvim"
     },
+    "translate.nvim": {
+      "rev": "1a841e56407ba02e919ed9af573dbe531404aebb",
+      "src": "https://github.com/uga-rosa/translate.nvim"
+    },
     "tv.nvim": {
       "rev": "c0603ca8f31299c83deaa9a24a63d67116db25cd",
       "src": "https://github.com/alexpasmantier/tv.nvim"
