@@ -2,6 +2,8 @@
 -- === Editor behavior
 -- ===
 
+-- 关闭底部状态栏
+vim.o.laststatus = 0
 -- 开启左侧数字
 vim.o.number = true
 -- 使用相对数
@@ -76,7 +78,8 @@ autocmd BufLeave *  :silent !fcitx5-remote -c
 -- 开启高亮复制
 vim.cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]])
 
-
+-- 主题颜色
+vim.cmd.colorscheme("catppuccin")
 
 
 

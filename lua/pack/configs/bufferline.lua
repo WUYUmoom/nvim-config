@@ -9,7 +9,7 @@ if vim.g.vscode then return end
 
 local P = {
 	name = "bufferline.nvim",
-	deps = { "nvim-web-devicons" },   -- 确保图标库先加载
+	deps = { "nvim-web-devicons" }, -- 确保图标库先加载
 }
 
 -- 懒加载触发器：打开或新建文件时触发

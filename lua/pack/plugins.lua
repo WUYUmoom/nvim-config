@@ -44,6 +44,8 @@ local specs = {
 	'https://github.com/cap153/peek.nvim',
 	-- yazi.lua 文件管理器
 	'https://github.com/mikavilpas/yazi.nvim',
+	-- lualine.lua 底部状态栏
+	"https://github.com/nvim-lualine/lualine.nvim",
 	-- sudo权限保存文件
 	"https://github.com/lambdalisue/vim-suda",
 	-- 查看可用键位
