@@ -27,6 +27,10 @@ local specs = {
 	"https://github.com/nvim-treesitter/nvim-treesitter-context",
 	-- bufferline.lua 顶部状态栏
 	'https://github.com/akinsho/bufferline.nvim',
+	-- lualine.lua 底部状态栏
+	"https://github.com/nvim-lualine/lualine.nvim",
+	-- outline.lua 大纲、函数变量结构
+	"https://github.com/hedyhli/outline.nvim",
 	-- noice.lua 取代消息、命令行和弹出菜单的 UI
 	"https://github.com/folke/noice.nvim",
 	"https://github.com/MunifTanjim/nui.nvim",
@@ -44,8 +48,6 @@ local specs = {
 	'https://github.com/cap153/peek.nvim',
 	-- yazi.lua 文件管理器
 	'https://github.com/mikavilpas/yazi.nvim',
-	-- lualine.lua 底部状态栏
-	"https://github.com/nvim-lualine/lualine.nvim",
 	-- sudo权限保存文件
 	"https://github.com/lambdalisue/vim-suda",
 	-- 查看可用键位

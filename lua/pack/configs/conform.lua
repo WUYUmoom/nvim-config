@@ -41,7 +41,7 @@ local function get_ensure_installed_for_ft(ft, ft_table)
 end
 
 -- 快捷键纯懒加载：只在按下快捷键时激活
-vim.keymap.set({ "n", "v" }, "<leader>f", function()
+vim.keymap.set({ "n", "x" }, "<leader>f", function()
 	PackUtils.load(P, function()
 		require("conform").setup({ -- At a minimum, you will need to set up some formatters by filetype
 			formatters_by_ft = formatters_by_ft

@@ -45,7 +45,7 @@
 			"\t\tend)",
 			"\tend",
 			"})",
-			"-- vim.keymap.set({ \"n\", \"v\" }, \"${8:<++>}\", function()",
+			"-- vim.keymap.set({ \"n\", \"x\" }, \"${8:<++>}\", function()",
 			"-- \tPackUtils.load(P, function()",
 			"-- \t\t$9",
 			"-- \tend)",

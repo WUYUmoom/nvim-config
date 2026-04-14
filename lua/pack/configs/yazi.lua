@@ -15,7 +15,7 @@ local P = {
 }
 
 -- 快捷键触发懒加载
-vim.keymap.set({ "n", "v" }, "tt", function()
+vim.keymap.set({ "n", "x" }, "tt", function()
 	-- 核心：直接调用引擎，把配置逻辑传进去
 	PackUtils.load(P, function()
 	require("yazi").setup({

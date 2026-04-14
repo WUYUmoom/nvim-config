@@ -80,6 +80,10 @@
       "rev": "6e76c5e47e957fbf080b1fdac165c66dbd2e7cfb",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
+    "outline.nvim": {
+      "rev": "c293eb56db880a0539bf9d85b4a27816960b863e",
+      "src": "https://github.com/hedyhli/outline.nvim"
+    },
     "peek.nvim": {
       "rev": "803815d18689b8f9e69d433b08ed767d7555128c",
       "src": "https://github.com/cap153/peek.nvim"

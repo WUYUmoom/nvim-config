@@ -3,11 +3,13 @@
 -- ===
 
 local function mapkey(mode, lhs, rhs, opts)
-    vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", { silent = true, nowait = true }, opts or {}))
+	vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", { silent = true, nowait = true }, opts or {}))
 end
 
 local function mapcmd(key, cmd)
-	vim.keymap.set("n", key, "<cmd>" .. cmd .. "<cr>", { silent = true })
+	vim.keymap.set("n", key, function()
+		vim.cmd(cmd)
+	end, { silent = true })
 end
 
 local function maplua(modes, key, action, desc)
@@ -180,58 +182,55 @@ mapkey("x", "<s-tab>", "<gv")
 mapkey("x", "<tab>", ">gv")
 
 -- ===
--- === 批量替换
+-- === 批量替换 (修复 Shell 逃逸与正则符冲突版)
 -- ===
 
 -- 替换当前目录及子目录下所有文件内容
 local function search_and_replace()
-	return function ()
-	-- 获取用户输入的查找内容,使用 input() 函数动态输入替换内容
-	local search_text = vim.fn.input("Search for: ")
+	return function()
+		local search_text = vim.fn.input("Search for: ")
+		if search_text == "" then return end
+		local replace_text = vim.fn.input("Replace with: ")
 
-	-- 获取用户输入的替换内容
-	local replace_text = vim.fn.input("Replace with: ")
+		-- 为 sed 转义分隔符 '/'，防止 s/a/b/g 出现语法错误
+		local sed_search = vim.fn.escape(search_text, '/')
+		local sed_replace = vim.fn.escape(replace_text, '/')
 
-	-- 执行替换命令
-	if search_text ~= "" and replace_text ~= "" then
-		local cmd = 'execute "!grep -rl \\"'
-				.. search_text
-				.. '\\" ./ | xargs sed -i \\"s/'
-				.. search_text
-				.. "/"
-				.. replace_text
-				.. '/g\\""'
+		-- 利用内核自动转义并生成安全的单引号包裹
+		local grep_arg = vim.fn.shellescape(search_text)
+		local sed_arg = vim.fn.shellescape('s/' .. sed_search .. '/' .. sed_replace .. '/g')
+
+		-- 执行拼接：grep 增加 -F 参数表示“固定字符串”，彻底无视正则符号(如括号、星号)
+		local cmd = '!grep -rlF ' .. grep_arg .. ' ./ | xargs sed -i ' .. sed_arg
 		vim.cmd(cmd)
-		print("Replaced all occurrences of '" .. search_text .. "' with '" .. replace_text .. "'")
-	else
-		print("Search or replace text cannot be empty.")
-	end
+		-- 强制 Neovim 检查文件在外部的改动并立即刷新 UI
+		vim.cmd("checktime")
+		print("\n✅ Replaced occurrences of '" .. search_text .. "' in workspace.")
 	end
 end
 
 -- 替换当前文件内容
 local function search_and_replace_current_file()
 	return function()
-		-- 获取用户输入的查找内容
 		local search_text = vim.fn.input("Search for in current file: ")
-
-		-- 获取用户输入的替换内容
+		if search_text == "" then return end
 		local replace_text = vim.fn.input("Replace with: ")
 
-		-- 执行替换命令
-		if search_text ~= "" and replace_text ~= "" then
-			-- 使用 sed 替换当前文件中的匹配内容，并正确转义引号
-			local cmd = string.format("!sed -i 's/%s/%s/g' %%", search_text, replace_text)
-			vim.cmd(cmd)
-			print("Replaced all occurrences of '" .. search_text .. "' with '" .. replace_text .. "' in current file.")
-		else
-			print("Search or replace text cannot be empty.")
-		end
+		local sed_search = vim.fn.escape(search_text, '/')
+		local sed_replace = vim.fn.escape(replace_text, '/')
+		local sed_arg = vim.fn.shellescape('s/' .. sed_search .. '/' .. sed_replace .. '/g')
+
+		-- % 代表当前文件
+		local cmd = '!sed -i ' .. sed_arg .. ' %'
+		vim.cmd(cmd)
+
+		vim.cmd("checktime")
+		print("\n✅ Replaced occurrences in current file.")
 	end
 end
 
-maplua("n","<leader>sa",search_and_replace(), "替换当前目录及子目录下所有文件内容")
-maplua("n","<leader>sr",search_and_replace_current_file(), "替换当前文件内容")
+maplua("n", "<leader>sa", search_and_replace(), "替换当前目录及子目录下所有文件内容")
+maplua("n", "<leader>sr", search_and_replace_current_file(), "替换当前文件内容")
 
 -- ===
 -- === 临时“存档”文件当前的版本，并与后续的修改进行 diff 对比
@@ -305,7 +304,9 @@ function map:key(mode, lhs, rhs)
 end
 
 function map:cmd(key, cmd)
-	vim.keymap.set("n", key, "<cmd>" .. cmd .. "<cr>", { silent = true })
+	vim.keymap.set("n", key, function()
+		vim.cmd(cmd)
+	end, { silent = true })
 end
 
 function map:lua(key, txt_or_func)

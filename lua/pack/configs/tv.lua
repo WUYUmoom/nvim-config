@@ -35,7 +35,7 @@ local function load_plugin()
 	end)
 end
 
-vim.keymap.set({ "n", "v" }, "<c-t>", function()
+vim.keymap.set({ "n", "x" }, "<c-t>", function()
 	load_plugin()
 	if vim.fs.root(0, '.git') then
 		vim.cmd('Tv git-files')
@@ -44,7 +44,7 @@ vim.keymap.set({ "n", "v" }, "<c-t>", function()
 	end
 end, { desc = "Smart Tv: git-files or files" })
 
-vim.keymap.set({ "n", "v" }, "<c-f>", function()
+vim.keymap.set({ "n", "x" }, "<c-f>", function()
 	load_plugin()
 	vim.cmd('Tv text')
 end, { desc = "模糊查找字符串" })
