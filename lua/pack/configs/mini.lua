@@ -12,14 +12,28 @@ vim.api.nvim_create_autocmd({
 			PackUtils.load(P, function()
 				require('mini.surround').setup {
 					mappings = {
-						add = 's',     -- Add surrounding
-						delete = 'sd', -- Delete surrounding
-						find = 'sf',   -- Find surrounding (to the right)
+						add = 's',       -- Add surrounding
+						delete = 'sd',   -- Delete surrounding
+						find = 'sf',     -- Find surrounding (to the right)
 						find_left = 'sF', -- Find surrounding (to the left)
 						highlight = 'sh', -- Highlight surrounding
-						replace = 'cs', -- Replace surrounding/change sround
+						replace = 'cs',  -- Replace surrounding/change sround
 						update_n_lines = 'sn', -- Update `n_lines`
 					},
+					custom_surroundings = {
+						b = {
+							input = { '%*%*().-()%*%*' },
+							output = { left = '**', right = '**' }
+						},
+						i = {
+							input = { '%*().-()%*' },
+							output = { left = '*', right = '*' }
+						},
+						c = {
+							input = { '`().-()`' },
+							output = { left = '`', right = '`' }
+						}
+					}
 				}
 			end)
 		end)
