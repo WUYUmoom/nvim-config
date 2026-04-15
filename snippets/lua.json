@@ -11,7 +11,7 @@
 	"github": {
 		"prefix": "github",
 		"body": [
-			"\"https:\/\/github.com\/${0}\","
+			"'https:\/\/github.com\/${0}',"
 		],
 		"description": "Github url"
 	},

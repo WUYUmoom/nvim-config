@@ -19,29 +19,31 @@ local specs = {
 	-- treesitter.lua 需要安装tree-sitter-cli工具包
 	'https://github.com/nvim-treesitter/nvim-treesitter',
 	-- indentblankline.lua 彩虹缩进
-	"https://github.com/lukas-reineke/indent-blankline.nvim",
+	'https://github.com/lukas-reineke/indent-blankline.nvim',
+	-- gitsigns.lua 突出增、删、改过的行
+	'https://github.com/lewis6991/gitsigns.nvim',
 	-- ufo.lua 折叠插件
-	"https://github.com/kevinhwang91/nvim-ufo",
-	"https://github.com/kevinhwang91/promise-async",
+	'https://github.com/kevinhwang91/nvim-ufo',
+	'https://github.com/kevinhwang91/promise-async',
 	-- stickscroll.lua 代码函数名称浏览时固定
-	"https://github.com/nvim-treesitter/nvim-treesitter-context",
+	'https://github.com/nvim-treesitter/nvim-treesitter-context',
 	-- bufferline.lua 顶部状态栏
 	'https://github.com/akinsho/bufferline.nvim',
 	-- lualine.lua 底部状态栏
-	"https://github.com/nvim-lualine/lualine.nvim",
+	'https://github.com/nvim-lualine/lualine.nvim',
 	-- outline.lua 大纲、函数变量结构
-	"https://github.com/hedyhli/outline.nvim",
+	'https://github.com/hedyhli/outline.nvim',
 	-- noice.lua 取代消息、命令行和弹出菜单的 UI
-	"https://github.com/folke/noice.nvim",
-	"https://github.com/MunifTanjim/nui.nvim",
+	'https://github.com/folke/noice.nvim',
+	'https://github.com/MunifTanjim/nui.nvim',
 	-- snacks.lua 图片预览、lazygit、lsp_references模糊查找
-	"https://github.com/folke/snacks.nvim",
+	'https://github.com/folke/snacks.nvim',
 	-- mini.lua 各种对字符的surround包裹{} [] ''
-	"https://github.com/echasnovski/mini.nvim",
+	'https://github.com/echasnovski/mini.nvim',
 	-- autopairs.lua 对字符自动补全另一半
-	"https://github.com/windwp/nvim-autopairs",
+	'https://github.com/windwp/nvim-autopairs',
 	-- tv.lua 模糊查找television
-	"https://github.com/alexpasmantier/tv.nvim",
+	'https://github.com/alexpasmantier/tv.nvim',
 	-- coderunner.lua 运行代码
 	'https://github.com/CRAG666/code_runner.nvim',
 	-- peek.lua 预览markdown
@@ -49,11 +51,11 @@ local specs = {
 	-- yazi.lua 文件管理器
 	'https://github.com/mikavilpas/yazi.nvim',
 	-- translate.lua 快捷键翻译
-	"https://github.com/uga-rosa/translate.nvim",
+	'https://github.com/uga-rosa/translate.nvim',
 	-- sudo权限保存文件
-	"https://github.com/lambdalisue/vim-suda",
+	'https://github.com/lambdalisue/vim-suda',
 	-- 查看可用键位
-	"https://github.com/folke/which-key.nvim",
+	'https://github.com/folke/which-key.nvim',
 }
 -- 禁用插件：不会加载，不会下载(如果是新添加的)，已在硬盘上不会被删除
 local disabled = {

@@ -23,7 +23,7 @@ end, { desc = "Lazy load and open Peek" })
 
 vim.api.nvim_create_user_command("PeekClose", function()
 	-- 如果插件没加载，Close 命令通常不需要做任何事，或者也触发加载
-	if PackUtils.is_initialized[P.name] then
+	if PackUtils.plugin_loaded[P.name] then
 		require("peek").close()
 	end
 end, { desc = "Close Peek" })
