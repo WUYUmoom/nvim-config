@@ -13,9 +13,9 @@ vim.api.nvim_create_user_command("PeekOpen", function()
 	PackUtils.load(P, function()
 		require("peek").setup({
 			port = 9000,
-			app = { "zen", "-private-window" },
+			-- app = { "zen", "-private-window" },
 			-- app = { "firefox-esr", "-private-window" },
-			-- app = { "google-chrome-stable", "--app=http://localhost:9000/?theme=dark", "--incognito" },
+			app = { "chromium", "--app=http://localhost:9000/?theme=dark", "--incognito" },
 		})
 	end)
 	require("peek").open()

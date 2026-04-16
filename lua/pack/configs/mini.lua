@@ -29,7 +29,7 @@ vim.api.nvim_create_autocmd({
 							input = { '%*().-()%*' },
 							output = { left = '*', right = '*' }
 						},
-						c = {
+						d = {
 							input = { '`().-()`' },
 							output = { left = '`', right = '`' }
 						}

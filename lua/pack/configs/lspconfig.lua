@@ -5,9 +5,9 @@ if vim.g.vscode then return end
 local arch = jit and jit.arch or ""
 local is_arm = arch:match("arm") or arch:match("aarch64")
 
-local servers = { "lua_ls", "rust_analyzer", "pylsp" }
+local servers = { "lua_ls", "rust_analyzer", "pylsp", "denols", }
 if not is_arm then
-	vim.list_extend(servers, { "marksman", "ts_ls", "svelte", "cssls", "html" })
+	vim.list_extend(servers, { "marksman",  "svelte", "cssls", "html" })
 end
 
 -- 2. 插件配置清单

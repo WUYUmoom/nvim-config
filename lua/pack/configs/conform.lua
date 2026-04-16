@@ -17,8 +17,15 @@ local formatters_by_ft = {
 	html = { "djlint" },
 	sh = { "shfmt" },
 	zsh = { "shfmt" },
+	typescript = { "deno_fmt" },
+	javascript = { "deno_fmt" },
+	markdown = { "deno_fmt_markdown" },
 }
 
+local real_executable_map = {
+	deno_fmt = "deno",
+	deno_fmt_markdown = "deno",
+}
 
 -- 辅助函数：从指定文件类型的配置中提取所有工具名称（去重）
 local function get_ensure_installed_for_ft(ft, ft_table)
@@ -44,17 +51,33 @@ end
 vim.keymap.set({ "n", "x" }, "<leader>f", function()
 	PackUtils.load(P, function()
 		require("conform").setup({ -- At a minimum, you will need to set up some formatters by filetype
-			formatters_by_ft = formatters_by_ft
-		})
+			formatters_by_ft = formatters_by_ft,
+			formatters = {
+				deno_fmt_markdown = {
+					inherit = "deno_fmt", -- 继承格式化程序
+					append_args = { "--indent-width", "4" },
+				}
+			},
+		}
+		)
 	end)
-	local registry = require("mason-registry")
 	local ft = vim.bo.filetype
-	local tools = get_ensure_installed_for_ft(ft, formatters_by_ft)
-	for _, tool in ipairs(tools) do
-		if not registry.is_installed(tool) then
-			vim.notify("Installing formatter: " .. tool, vim.log.levels.INFO)
-			registry.get_package(tool):install()
+	local raw_tools = get_ensure_installed_for_ft(ft, formatters_by_ft)
+	local need_install = false
+	for _, raw_tool in ipairs(raw_tools) do
+		local real_tool = real_executable_map[raw_tool] or raw_tool
+		if vim.fn.executable(real_tool) == 0 then
+			need_install = true
+			local registry = require("mason-registry")
+			if not registry.is_installed(real_tool) then
+				vim.notify("⬇️ Installing formatter: " .. real_tool, vim.log.levels.INFO)
+				registry.get_package(real_tool):install()
+			end
 		end
 	end
-	require("conform").format({ async = true, lsp_fallback = true })
+	if need_install then
+		vim.notify("⏳ 格式化工具正在后台安装，请稍后重试...", vim.log.levels.WARN)
+	else
+		require("conform").format({ async = true, lsp_fallback = true })
+	end
 end, { desc = "格式化代码（检测安装缺失工具）" })
