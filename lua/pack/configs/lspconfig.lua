@@ -1,33 +1,47 @@
 -- === LSP 核心配置 (Lspconfig + Mason) ===
 if vim.g.vscode then return end
 
--- 1. 环境探测：判断 CPU 架构，决定安装哪些 LSP
+-- 环境探测：判断 CPU 架构，决定安装哪些 LSP
 local arch = jit and jit.arch or ""
 local is_arm = arch:match("arm") or arch:match("aarch64")
 
 local servers = { "lua_ls", "rust_analyzer", "pylsp", "denols", }
 if not is_arm then
-	vim.list_extend(servers, { "marksman",  "svelte", "cssls", "html" })
+	vim.list_extend(servers, { "marksman", "svelte", "cssls", "html" })
 end
 
--- 2. 插件配置清单
+-- 插件配置清单
 local P = {
 	name = "nvim-lspconfig",
 	deps = { "mason.nvim", "mason-lspconfig.nvim", "inlay-hints.nvim" },
 }
 
--- 3. 懒加载触发器：当打开文件时触发
+-- === 全局快捷键映射 ===
+local opts = { noremap = true, silent = true }
+vim.keymap.set("n", "<leader>h", vim.lsp.buf.hover, opts)         -- <space>h显示提示文档
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)           -- gd跳转到定义
+vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)          -- gD跳转到声明(例如c语言中的头文件中的原型、一个变量的extern声明)
+vim.keymap.set("n", "go", vim.lsp.buf.type_definition, opts)      -- go跳转到变量类型定义的位置(例如一些自定义类型)
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)       -- <space>rn变量重命名
+vim.keymap.set("n", "<leader>aw", vim.lsp.buf.code_action, opts)  -- <space>aw可以在出现警告或错误的地方打开建议的修复方法
+vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- <space>d浮动窗口显示所在行警告或错误信息
+vim.keymap.set("n", "<leader>-", vim.diagnostic.goto_prev, opts)  -- <space>-跳转到上一处警告或错误的地方
+vim.keymap.set("n", "<leader>=", vim.diagnostic.goto_next, opts)  -- <space>+跳转到下一处警告或错误的地方
+-- vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)         -- gr跳转到引用了对应变量或函数的位置，改用snacks
+-- vim.keymap.set({ 'n', 'x' }, '<leader>f', function() vim.lsp.buf.format({ async = true }) end, opts) -- <space>f进行代码格式化
+
+-- 懒加载触发器：当打开文件时触发
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 	callback = function()
 		PackUtils.load(P, function()
-			-- === A. 基础依赖初始化 (Mason) ===
+			-- === 基础依赖初始化 (Mason) ===
 			require("mason").setup()
 			require("mason-lspconfig").setup({
 				ensure_installed = servers,
 			})
 			require("inlay-hints").setup()
 
-			-- === B. 全局诊断设置 ===
+			-- === 全局诊断设置 ===
 			vim.diagnostic.config({
 				signs = {
 					text = {
@@ -39,21 +53,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 				},
 			})
 
-			-- === C. 全局快捷键映射 ===
-			-- local opts = { noremap = true, silent = true }
-			vim.keymap.set("n", "<leader>h", vim.lsp.buf.hover, opts)         -- <space>h显示提示文档
-			vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)           -- gd跳转到定义
-			vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)          -- gD跳转到声明(例如c语言中的头文件中的原型、一个变量的extern声明)
-			vim.keymap.set("n", "go", vim.lsp.buf.type_definition, opts)      -- go跳转到变量类型定义的位置(例如一些自定义类型)
-			vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)       -- <space>rn变量重命名
-			vim.keymap.set("n", "<leader>aw", vim.lsp.buf.code_action, opts)  -- <space>aw可以在出现警告或错误的地方打开建议的修复方法
-			vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- <space>d浮动窗口显示所在行警告或错误信息
-			vim.keymap.set("n", "<leader>-", vim.diagnostic.goto_prev, opts)  -- <space>-跳转到上一处警告或错误的地方
-			vim.keymap.set("n", "<leader>=", vim.diagnostic.goto_next, opts)  -- <space>+跳转到下一处警告或错误的地方
-			-- vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)         -- gr跳转到引用了对应变量或函数的位置，改用snacks
-			-- vim.keymap.set({ 'n', 'x' }, '<leader>f', function() vim.lsp.buf.format({ async = true }) end, opts) -- <space>f进行代码格式化
-
-			-- === D. 特定 LSP 配置 (使用 Neovim 0.11+ vim.lsp.config 语法) ===
+			-- === 特定 LSP 配置 (使用 Neovim 0.11+ vim.lsp.config 语法) ===
 
 			-- Python (pylsp) + uv 虚拟环境自适应
 			vim.lsp.config("pylsp", {

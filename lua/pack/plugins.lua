@@ -82,19 +82,21 @@ local function get_plugin_names(arg_lead)
 	return names
 end
 
--- :PackUpdate 命令更新插件，不带参数更新全部
+-- :PackUpdate 命令更新插件，不带参数更新全部，默认显示审查界面（需按 :w 确认）；可以加 ! 强制直接更新
 vim.api.nvim_create_user_command("PackUpdate", function(opts)
 	local targets = #opts.fargs > 0 and opts.fargs or nil
+	local force = opts.bang   -- 如果输入了 PackUpdate! 则 opts.bang 为 true
 	if targets then
 		vim.notify("Checking updates for: " .. table.concat(targets, ", "), vim.log.levels.INFO)
 	else
 		vim.notify("Checking updates for all plugins...", vim.log.levels.INFO)
 	end
-	vim.pack.update(targets)
+	vim.pack.update(targets, { force = force })
 end, {
-	nargs = "*",                -- 支持 0 到多个参数
-	complete = get_plugin_names, -- 绑定补全函数，可以改用'packadd'不过补全列表会有一些非vim.pack管理的插件
-	desc = "Update specified or all plugins",
+	nargs = "*",
+	bang = true,   -- 声明支持 ! 符号
+	complete = get_plugin_names,
+	desc = "Update plugins (use ! to skip confirmation)",
 })
 
 -- :PackStatus 命令查看插件当前状态和版本
