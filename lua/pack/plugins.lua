@@ -20,6 +20,8 @@ local specs = {
 	'https://github.com/nvim-treesitter/nvim-treesitter',
 	-- indentblankline.lua 彩虹缩进
 	'https://github.com/lukas-reineke/indent-blankline.nvim',
+	-- rainbowdelimiters.lua 彩虹括号
+	'https://github.com/HiPhish/rainbow-delimiters.nvim',
 	-- gitsigns.lua 突出增、删、改过的行
 	'https://github.com/lewis6991/gitsigns.nvim',
 	-- ufo.lua 折叠插件

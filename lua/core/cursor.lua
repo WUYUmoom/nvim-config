@@ -15,11 +15,11 @@ if vim.g.neovide then
 		vim.env.HTTPS_PROXY = "http://127.0.0.1:7897"
 	end
 	-- https://github.com/neovide/neovide/issues/1282
-	vim.api.nvim_set_keymap('n', '<sC-v>', '"+p', { noremap = true })
-	vim.api.nvim_set_keymap('v', '<sC-v>', '"+P', { noremap = true })
-	vim.api.nvim_set_keymap('c', '<sC-v>', '<C-R>+', { noremap = true })
-	vim.api.nvim_set_keymap('i', '<sC-v>', '<C-R>+', { noremap = true })
-	vim.api.nvim_set_keymap('t', '<sC-v>', '<C-\\><C-n>"+Pi', { noremap = true })
+	vim.keymap.set('n', '<sC-v>', '"+p', { noremap = true })
+	vim.keymap.set('v', '<sC-v>', '"+P', { noremap = true })
+	vim.keymap.set('c', '<sC-v>', '<C-R>+', { noremap = true })
+	vim.keymap.set('i', '<sC-v>', '<C-R>+', { noremap = true })
+	vim.keymap.set('t', '<sC-v>', '<C-\\><C-n>"+Pi', { noremap = true })
 	vim.g.neovide_opacity = 0.75
 	-- vim.o.guifont = "ComicShannsMono Nerd Font:h16" -- text below applies for VimScript
 	vim.o.guifont = "Ioskeley Mono:h15" -- text below applies for VimScript
@@ -30,7 +30,7 @@ end
 -- === map function
 -- ===
 local function mapkey(mode, lhs, rhs)
-	vim.api.nvim_set_keymap(mode, lhs, rhs, { noremap = true })
+	vim.keymap.set(mode, lhs, rhs, { noremap = true })
 end
 -- interestind stess
 mapkey('', '[a<LEADER>', '1k')
