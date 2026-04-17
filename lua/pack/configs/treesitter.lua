@@ -7,6 +7,7 @@ local P = {
 
 PackUtils.setup_listener(P.name, P.build_cmd)
 
+-- https://github.com/nvim-treesitter/nvim-treesitter/blob/main/SUPPORTED_LANGUAGES.md
 local ensure_installed = {
 	"json",
 	"rust",

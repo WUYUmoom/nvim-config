@@ -65,26 +65,55 @@ vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe 
 -- fcitx5在normal模式时自动切换为英文输入法,摘自fcitx5的archwiki
 vim.cmd([[
 autocmd InsertLeave * :silent !fcitx5-remote -c
-autocmd BufCreate *  :silent !fcitx5-remote -c 
-autocmd BufEnter *  :silent !fcitx5-remote -c 
+autocmd BufCreate *  :silent !fcitx5-remote -c
+autocmd BufEnter *  :silent !fcitx5-remote -c
 autocmd BufLeave *  :silent !fcitx5-remote -c
 ]])
--- 意为:
--- 当 进入插入模式 时 触发shell命令 fcitx-remote -c 关闭输入法，改为英文输入
--- 当 创建Buf 时 触发shell命令 fcitx-remote -c 关闭输入法，改为英文输入
--- 当 进入Buf 时 触发shell命令 fcitx-remote -c 关闭输入法, 改为英文输入
--- 当 离开Buf 时 触发shell命令 fcitx-remote -c 关闭输入法, 改为英文输入
+-- 意为: 当 进入插入模式、创建Buf、进入Buf、离开Buf 时 触发shell命令 fcitx-remote -c 关闭输入法，改为英文输入
+
+-- 日志高亮关键字
+vim.filetype.add({
+	extension = { -- 后缀名
+		log = "log",
+		txt = function(path)
+			if path:match(".*%.log") then
+				return "log"
+			end
+			return "text"
+		end,
+	},
+	filename = { -- 文件名
+		["messages"] = "log",
+		["syslog"] = "log",
+	},
+})
+local log_group = vim.api.nvim_create_augroup("LogHighlighting", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+	group = log_group,
+	pattern = "log",
+	callback = function()
+		-- 这里的 fg 是十六进制颜色，你可以根据喜好调整
+		vim.api.nvim_set_hl(0, "LogVersion", { fg = "#50FA7B", bold = true })  -- 绿色
+		vim.api.nvim_set_hl(0, "LogDownloaded", { fg = "#BD93F9" })            -- 紫色
+		vim.api.nvim_set_hl(0, "LogCompiling", { fg = "#F1FA8C" })             -- 黄色
+		vim.api.nvim_set_hl(0, "LogFinished", { fg = "#8BE9FD", bold = true }) -- 青色
+		-- 清除旧的匹配，防止重复渲染卡顿
+		for _, match in ipairs(vim.fn.getmatches()) do
+			if match.group:find("^Log") then
+				vim.fn.matchdelete(match.id)
+			end
+		end
+		-- 版本号匹配
+		vim.fn.matchadd("LogVersion", [[v\d\+\.\d\+\.\d\+]])
+		-- \V 表示 "very nomagic"，即不使用正则特殊字符，直接匹配字面量
+		vim.fn.matchadd("LogDownloaded", [[\VDownloaded]])
+		vim.fn.matchadd("LogCompiling", [[\VCompiling]])
+		vim.fn.matchadd("LogFinished", [[\VFinished]])
+	end,
+})
 
 -- 开启高亮复制
 vim.cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]])
 
 -- 主题颜色
 vim.cmd.colorscheme("catppuccin")
-
-
-
-
-
-
-
-
