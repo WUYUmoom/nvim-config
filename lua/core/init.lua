@@ -105,10 +105,10 @@ vim.api.nvim_create_autocmd("FileType", {
 		end
 		-- 版本号匹配
 		vim.fn.matchadd("LogVersion", [[v\d\+\.\d\+\.\d\+]])
-		-- \V 表示 "very nomagic"，即不使用正则特殊字符，直接匹配字面量
-		vim.fn.matchadd("LogDownloaded", [[\VDownloaded]])
+		-- \V 表示 "very nomagic"直接匹配字面量，\c 表示不区分大小写，\S* 匹配零个或多个“非空白”字符
+		vim.fn.matchadd("LogDownloaded", [[\c\S*download\S*]])
 		vim.fn.matchadd("LogCompiling", [[\VCompiling]])
-		vim.fn.matchadd("LogFinished", [[\VFinished]])
+		vim.fn.matchadd("LogFinished", [[\c\S*finish\S*]])
 	end,
 })
 

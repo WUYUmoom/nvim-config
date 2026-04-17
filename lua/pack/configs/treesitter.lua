@@ -20,6 +20,7 @@ local ensure_installed = {
 
 -- 在 FileType 确定时，检查、安装并启动
 vim.api.nvim_create_autocmd("FileType", {
+  pattern = ensure_installed,
 	group = vim.api.nvim_create_augroup("NativeTreesitter", { clear = true }),
 	callback = function(args)
 		local buf = args.buf

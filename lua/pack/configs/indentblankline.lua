@@ -6,7 +6,7 @@ local P = {
 
 -- 懒加载触发器
 vim.api.nvim_create_autocmd({
-	"FileType",
+	"BufReadPost", "BufNewFile" -- 处理普通的文本文件时也能显示基础线条
 }, {
 	callback = function()
 		PackUtils.load(P, function()
@@ -32,7 +32,10 @@ vim.api.nvim_create_autocmd({
 				vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
 			end)
 			require("ibl").setup({
-				indent = { highlight = highlight }
+				indent = { highlight = highlight },
+				exclude = {
+					filetypes = { "dashboard" },
+				},
 			})
 		end)
 	end
