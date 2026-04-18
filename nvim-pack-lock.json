@@ -116,6 +116,10 @@
       "rev": "c0603ca8f31299c83deaa9a24a63d67116db25cd",
       "src": "https://github.com/alexpasmantier/tv.nvim"
     },
+    "undotree": {
+      "rev": "0e6d41d55ad147407e4ba00a292973de8db0b836",
+      "src": "https://github.com/jiaoshijie/undotree"
+    },
     "vim-suda": {
       "rev": "c492741b4679b3cdd4d9e34138209784e061d916",
       "src": "https://github.com/lambdalisue/vim-suda"

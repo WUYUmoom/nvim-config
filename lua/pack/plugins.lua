@@ -27,6 +27,8 @@ local specs = {
 	-- ufo.lua 折叠插件
 	'https://github.com/kevinhwang91/nvim-ufo',
 	'https://github.com/kevinhwang91/promise-async',
+	-- undotree.lua
+	'https://github.com/jiaoshijie/undotree',
 	-- stickscroll.lua 代码函数名称浏览时固定
 	'https://github.com/nvim-treesitter/nvim-treesitter-context',
 	-- bufferline.lua 顶部状态栏
