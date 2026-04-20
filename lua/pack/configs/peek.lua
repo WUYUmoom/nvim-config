@@ -9,21 +9,19 @@ local P = {
 PackUtils.setup_listener(P.name, P.build_cmd)
 
 -- 在插件未加载时，这些命令就存在了。一旦被调用，它们会先加载插件，再执行真正的功能。
-vim.api.nvim_create_user_command("PeekOpen", function()
-	PackUtils.load(P, function()
-		require("peek").setup({
-			port = 9000,
-			-- app = { "zen", "-private-window" },
-			-- app = { "firefox-esr", "-private-window" },
-			app = { "chromium", "--app=http://localhost:9000/?theme=dark", "--incognito" },
-		})
-	end)
-	require("peek").open()
-end, { desc = "Lazy load and open Peek" })
-
-vim.api.nvim_create_user_command("PeekClose", function()
-	-- 如果插件没加载，Close 命令通常不需要做任何事，或者也触发加载
-	if PackUtils.plugin_loaded[P.name] then
-		require("peek").close()
+vim.api.nvim_create_user_command("PeekToggle", function()
+	local peek = require("peek")
+	if not peek.is_open() and vim.bo[vim.api.nvim_get_current_buf()].filetype == 'markdown' then
+		PackUtils.load(P, function()
+			require("peek").setup({
+				port = 9000,
+				-- app = { "zen", "-private-window" },
+				-- app = { "firefox-esr", "-private-window" },
+				app = { "chromium", "--app=http://localhost:9000/?theme=dark", "--incognito" },
+			})
+		end)
+		peek.open()
+	else
+		peek.close()
 	end
-end, { desc = "Close Peek" })
+end, { desc = "Lazy load and open Peek" })

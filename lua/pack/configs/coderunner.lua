@@ -8,7 +8,7 @@ local P = {
 -- 定义映射配置表
 local mappings = {
 	{ ft = { "rust", "python" }, cmd = "RunCode",                         desc = "Save and Run Code" },
-	{ ft = "markdown",           cmd = "PeekClose;PeekOpen",              desc = "Reload Markdown Preview" },
+	{ ft = "markdown",           cmd = "PeekToggle",              desc = "Reload Markdown Preview" },
 	{ ft = "dart",               cmd = "Telescope flutter commands",      desc = "Open Flutter Commands" },
 	{ ft = "go",                 cmd = "set splitbelow;sp;term go run %", desc = "Run Go file" },
 }

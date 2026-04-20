@@ -19,7 +19,7 @@ local formatters_by_ft = {
 	zsh = { "shfmt" },
 	typescript = { "deno_fmt" },
 	javascript = { "deno_fmt" },
-	markdown = { "deno_fmt_markdown" },
+	-- markdown = { "deno_fmt_markdown" },
 }
 
 local real_executable_map = {
