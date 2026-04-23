@@ -21,7 +21,9 @@ vim.api.nvim_create_user_command("PeekToggle", function()
 			})
 		end)
 		peek.open()
-	else
-		peek.close()
+	else -- 只有加载了插件的情况下执行关闭，这样可以跳过非markdown文件
+		if PackUtils.plugin_loaded[P.name] then
+			peek.close()
+		end
 	end
 end, { desc = "Lazy load and open Peek" })

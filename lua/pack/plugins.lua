@@ -8,7 +8,7 @@ local specs = {
 	'https://github.com/mason-org/mason-registry',
 	'https://github.com/nvim-tree/nvim-web-devicons',
 	-- blinkcmp.lua 自动补全、代码片段
-	'https://github.com/saghen/blink.cmp',
+	{ src = 'https://github.com/saghen/blink.cmp', version = "v1" },
 	'https://github.com/rafamadriz/friendly-snippets',
 	-- lspconfig.lua
 	'https://github.com/neovim/nvim-lspconfig',
@@ -89,7 +89,7 @@ end
 -- :PackUpdate 命令更新插件，不带参数更新全部，默认显示审查界面（需按 :w 确认）；可以加 ! 强制直接更新
 vim.api.nvim_create_user_command("PackUpdate", function(opts)
 	local targets = #opts.fargs > 0 and opts.fargs or nil
-	local force = opts.bang   -- 如果输入了 PackUpdate! 则 opts.bang 为 true
+	local force = opts.bang -- 如果输入了 PackUpdate! 则 opts.bang 为 true
 	if targets then
 		vim.notify("Checking updates for: " .. table.concat(targets, ", "), vim.log.levels.INFO)
 	else
@@ -98,7 +98,7 @@ vim.api.nvim_create_user_command("PackUpdate", function(opts)
 	vim.pack.update(targets, { force = force })
 end, {
 	nargs = "*",
-	bang = true,   -- 声明支持 ! 符号
+	bang = true, -- 声明支持 ! 符号
 	complete = get_plugin_names,
 	desc = "Update plugins (use ! to skip confirmation)",
 })

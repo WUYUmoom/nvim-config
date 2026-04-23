@@ -3,7 +3,9 @@ if vim.g.vscode then return end
 
 local P = {
 	name = "blink.cmp",
-	deps = { "friendly-snippets" },
+	deps = {
+		"friendly-snippets"
+	},
 	-- build_cmd = "cargo build --release",
 }
 

@@ -4,7 +4,7 @@ local P = {
 }
 
 -- 快捷键触发
-vim.keymap.set({ "n", "x" }, "<leader>u", function()
+vim.keymap.set({ "n", "x" }, "<leader>t", function()
 	PackUtils.load(P, function()
 		require('undotree').setup({
 			keymaps = {
