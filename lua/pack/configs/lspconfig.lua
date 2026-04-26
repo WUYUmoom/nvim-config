@@ -5,7 +5,7 @@ if vim.g.vscode then return end
 local arch = jit and jit.arch or ""
 local is_arm = arch:match("arm") or arch:match("aarch64")
 
-local servers = { "lua_ls", "rust_analyzer", "pylsp", "denols", }
+local servers = { "lua_ls", "rust_analyzer", "denols", "kotlin_language_server" }
 if not is_arm then
 	vim.list_extend(servers, { "marksman", "svelte", "cssls", "html" })
 end
@@ -16,6 +16,11 @@ local P = {
 	deps = { "mason.nvim", "mason-lspconfig.nvim", "inlay-hints.nvim" },
 }
 
+-- === 创建 :Mason 命令 ===
+vim.api.nvim_create_user_command("Mason", function()
+	require("mason.ui").open()
+end, { desc = "Open Mason package manager UI" })
+
 -- === 全局快捷键映射 ===
 local opts = { noremap = true, silent = true }
 vim.keymap.set("n", "<leader>h", vim.lsp.buf.hover, opts)         -- <space>h显示提示文档
@@ -23,7 +28,7 @@ vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)           -- gd跳转到
 vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)          -- gD跳转到声明(例如c语言中的头文件中的原型、一个变量的extern声明)
 vim.keymap.set("n", "go", vim.lsp.buf.type_definition, opts)      -- go跳转到变量类型定义的位置(例如一些自定义类型)
 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)       -- <space>rn变量重命名
-vim.keymap.set("n", "<leader>aw", vim.lsp.buf.code_action, opts)  -- <space>aw可以在出现警告或错误的地方打开建议的修复方法
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)  -- 【修改】<space>ca 快速修复/导入类
 vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- <space>d浮动窗口显示所在行警告或错误信息
 vim.keymap.set("n", "<leader>-", vim.diagnostic.goto_prev, opts)  -- <space>-跳转到上一处警告或错误的地方
 vim.keymap.set("n", "<leader>=", vim.diagnostic.goto_next, opts)  -- <space>+跳转到下一处警告或错误的地方
@@ -94,6 +99,18 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 				},
 			})
 
+			-- Kotlin (kotlin_language_server)
+			vim.lsp.config("kotlin_language_server", {
+				settings = {
+					codelens = {
+						enable = true,
+					},
+					inlayHints = {
+						enable = true,
+					},
+				},
+			})
+
 			-- Go (gopls)
 			vim.lsp.config("gopls", {
 				settings = {
@@ -118,3 +135,4 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 		end)
 	end
 })
+

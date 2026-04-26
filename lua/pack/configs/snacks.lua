@@ -8,7 +8,9 @@ local P = {
 PackUtils.load(P, function()
 	require("snacks").setup({
 		image = {},
-		lazygit = {},
+		lazygit = {
+			theme = {}, -- 【修改】设置为空表，阻止插件生成默认主题文件
+		},
 		notifier = {}, -- 替代了folke/noice.nvim插件的rcarriga/nvim-notify依赖
 		picker = {
 			win = {

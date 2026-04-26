@@ -30,7 +30,7 @@ local specs = {
 	-- undotree.lua
 	'https://github.com/jiaoshijie/undotree',
 	-- stickscroll.lua 代码函数名称浏览时固定
-	'https://github.com/nvim-treesitter/nvim-treesitter-context',
+	-- 'https://github.com/nvim-treesitter/nvim-treesitter-context',
 	-- bufferline.lua 顶部状态栏
 	'https://github.com/akinsho/bufferline.nvim',
 	-- lualine.lua 底部状态栏
@@ -52,8 +52,9 @@ local specs = {
 	'https://github.com/CRAG666/code_runner.nvim',
 	-- peek.lua 预览markdown
 	'https://github.com/cap153/peek.nvim',
-	-- yazi.lua 文件管理器
-	'https://github.com/mikavilpas/yazi.nvim',
+	-- tree.lua 文件管理器
+	-- 'https://github.com/mikavilpas/yazi.nvim',
+	'https://github.com/nvim-tree/nvim-tree.lua',
 	-- translate.lua 快捷键翻译
 	'https://github.com/uga-rosa/translate.nvim',
 	-- sudo权限保存文件

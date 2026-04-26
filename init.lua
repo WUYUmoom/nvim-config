@@ -23,3 +23,15 @@ require("pack.plugins")
 -- mv ~/.local/share/nvim{,.bak}
 -- mv ~/.local/state/nvim{,.bak}
 -- mv ~/.cache/nvim{,.bak}
+vim.g.clipboard = {
+  name = 'xclip', -- 如果你安装的是 xclip
+  copy = {
+    ['+'] = 'xclip -selection clipboard',
+    ['*'] = 'xclip -selection primary',
+  },
+  paste = {
+    ['+'] = 'xclip -selection clipboard -o',
+    ['*'] = 'xclip -selection primary -o',
+  },
+  cache_enabled = 1,
+}

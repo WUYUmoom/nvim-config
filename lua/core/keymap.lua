@@ -8,7 +8,9 @@ end
 
 local function mapcmd(key, cmd)
 	vim.keymap.set("n", key, function()
-		vim.cmd(cmd)
+		-- 【新增】将字符串中的 <CR> 替换为真正的换行符，以便 vim.cmd 能正确执行多条命令
+		local commands = cmd:gsub("<CR>", "\n")
+		vim.cmd(commands)
 	end, { silent = true })
 end
 
@@ -30,16 +32,11 @@ mapkey({ "n", "x", "o" }, "-", "Nzz")
 mapcmd("<leader><cr>", "nohlsearch")
 
 -- 保存和退出
-mapkey({ "n", "x", "o" }, "S", ":wall<cr>")
-mapkey({ "n", "x", "o" }, "Q", ":qall<cr>")
+mapkey({ "n", "x", "o" }, "<C-s>", ":wall<cr>")
+mapkey({ "n", "x", "o" }, "<C-q>", ":qall<cr>")
 
--- 撤销与反撤销
-mapkey({ "n", "x", "o" }, "l", "u")
-mapkey({ "n", "x", "o" }, "L", "<c-r>")
 
--- 插入
-mapkey({ "n", "x", "o" }, "k", "i")
-mapkey({ "n", "x", "o" }, "K", "I")
+
 
 mapkey('n', '<C-n>', '<C-o>')
 
@@ -93,7 +90,7 @@ maplua({ "x", "o", "n" }, "<CR>", smart_select("select_parent", 1), "扩大 Tree
 maplua({ "x", "o" }, "<BS>", smart_select("select_child", -1), "缩小 Treesitter/LSP 范围")
 
 
-
+---
 -- ===
 -- === Cursor Movement
 -- ===
@@ -104,10 +101,7 @@ maplua({ "x", "o" }, "<BS>", smart_select("select_child", -1), "缩小 Treesitte
 -- < n   i >
 --     e
 --     v
-mapkey({ "n", "x", "o" }, "n", "h")
-mapkey({ "n", "x", "o" }, "u", "k")
-mapkey({ "n", "x", "o" }, "e", "j")
-mapkey({ "n", "x", "o" }, "i", "l")
+
 
 -- 更快的导航
 mapkey({ "n", "x", "o" }, "U", "5k")
@@ -125,24 +119,12 @@ mapkey({ "n", "x", "o" }, "B", "5B")
 -- === Window management
 -- ===
 
--- 使用<space> + 新方向键 在分屏之间移动
-mapkey({ "n", "x", "o" }, "<LEADER>w", "<C-w>w")
-mapkey({ "n", "x", "o" }, "<LEADER>u", "<C-w>k")
-mapkey({ "n", "x", "o" }, "<LEADER>e", "<C-w>j")
-mapkey({ "n", "x", "o" }, "<LEADER>n", "<C-w>h")
-mapkey({ "n", "x", "o" }, "<LEADER>i", "<C-w>l")
-
--- 使用s + 新方向键 进行分屏
-mapcmd("su", "set nosplitbelow<CR>:split<CR>:set splitbelow")
-mapcmd("se", "set splitbelow<CR>:split")
-mapcmd("sn", "set nosplitright<CR>:vsplit<CR>:set splitright")
-mapcmd("si", "set splitright<CR>:vsplit")
 
 -- 使用方向键来调整窗口大小
-mapcmd("<up>", "res +5")
-mapcmd("<down>", "res -5")
-mapcmd("<left>", "vertical resize-5")
-mapcmd("<right>", "vertical resize+5")
+-- mapcmd("<up>", "res +5")
+-- mapcmd("<down>", "res -5")
+-- mapcmd("<left>", "vertical resize-5")
+-- mapcmd("<right>", "vertical resize+5")
 
 -- 使分屏窗口上下分布
 mapkey({ "n", "x", "o" }, "sh", "<C-w>t<C-w>K")
@@ -259,7 +241,7 @@ mapcmd('<leader>dd', 'DiffOrig')
 -- ===
 
 -- 打开一个终端窗口
-mapcmd("<LEADER>/", "set splitbelow<CR>:split<CR>:res +10<CR>:term")
+mapcmd("<C-\\>", "set splitbelow<CR>:split<CR>:res +1<CR>:term")
 
 -- 按两下空格跳转到占位符<++>,并进入插入模式
 mapkey({ "n", "x", "o" }, "<LEADER><LEADER>", "<Esc>/<++><CR>:nohlsearch<CR>c4l")
@@ -282,12 +264,12 @@ mapkey("x", "<c-/>", "gc", { remap = true })
 -- ===
 
 -- vim.cmd([[
---  au filetype dart noremap r :wall<cr>:Telescope flutter commands<cr>
---  au filetype python noremap r :wall<cr>:set splitbelow<cr>:sp<cr>:term uv run %<cr>
---  au filetype go noremap r :wall<cr>:set splitbelow<cr>:sp<cr>:term go run %<cr>
---  au filetype markdown noremap r :PeekClose<cr>:PeekOpen<cr>
---  au filetype rust noremap r :wall<cr>:set splitbelow<cr>:sp<cr>:term cargo run<cr>
--- ]])
+-- --  au filetype dart noremap r :wall<cr>:Telescope flutter commands<cr>
+-- --  au filetype python noremap r :wall<cr>:set splitbelow<cr>:sp<cr>:term uv run %<cr>
+-- --  au filetype go noremap r :wall<cr>:set splitbelow<cr>:sp<cr>:term go run %<cr>
+-- --  au filetype markdown noremap r :PeekClose<cr>:PeekOpen<cr>
+-- --  au filetype rust noremap r :wall<cr>:set splitbelow<cr>:sp<cr>:term cargo run<cr>
+-- -- ]])
 
 
 -- ===

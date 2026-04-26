@@ -69,13 +69,13 @@
       "rev": "e146efacbafed3789ac568abcc5a981c5decaa58",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
+    "nvim-tree.lua": {
+      "rev": "d277467fc0d1d0e2bca88165a1de6b526f9f6fe8",
+      "src": "https://github.com/nvim-tree/nvim-tree.lua"
+    },
     "nvim-treesitter": {
       "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
-    },
-    "nvim-treesitter-context": {
-      "rev": "b0c45cefe2c8f7b55fc46f34e563bc428ef99636",
-      "src": "https://github.com/nvim-treesitter/nvim-treesitter-context"
     },
     "nvim-ufo": {
       "rev": "ab3eb124062422d276fae49e0dd63b3ad1062cfc",
@@ -128,10 +128,6 @@
     "which-key.nvim": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
       "src": "https://github.com/folke/which-key.nvim"
-    },
-    "yazi.nvim": {
-      "rev": "d34b366517a21fb2366e8ac393fc903008345173",
-      "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
 }

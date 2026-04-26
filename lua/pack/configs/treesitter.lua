@@ -11,11 +11,11 @@ PackUtils.setup_listener(P.name, P.build_cmd)
 local ensure_installed = {
 	"json",
 	"rust",
-	"python",
 	"lua",
 	"markdown",
 	"bash",
 	"java",
+	"kotlin"
 }
 
 -- 在 FileType 确定时，检查、安装并启动
