@@ -150,14 +150,17 @@ function PackUtils.sync(active_specs, disabled_specs)
 	local installed_plugins = {}
 	local packages = vim.fn.expand(pack_dir .. "/*", false, true)
 	for _, pkg in ipairs(packages) do
-		for _, type_dir in ipairs({ "start", "opt" }) do
-			local path = pkg .. "/" .. type_dir
-			if vim.fn.isdirectory(path) == 1 then
-				local dirs = vim.fn.expand(path .. "/*", false, true)
-				for _, dir in ipairs(dirs) do
-					local name = dir:match("([^/]+)$")
-					if name ~= "README.md" and name ~= "doc" then
-						table.insert(installed_plugins, name)
+		-- 跳过通配符字面量和无效路径
+		if pkg:find("*", 1, true) == nil and vim.fn.isdirectory(pkg) == 1 then
+			for _, type_dir in ipairs({ "start", "opt" }) do
+				local path = pkg .. "/" .. type_dir
+				if vim.fn.isdirectory(path) == 1 then
+					local dirs = vim.fn.expand(path .. "/*", false, true)
+					for _, dir in ipairs(dirs) do
+						local name = dir:match("([^/]+)$")
+						if name and name ~= "README.md" and name ~= "doc" and name:find("*", 1, true) == nil then
+							table.insert(installed_plugins, name)
+						end
 					end
 				end
 			end
