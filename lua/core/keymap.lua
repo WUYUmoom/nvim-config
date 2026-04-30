@@ -1,7 +1,16 @@
 -- ===
 -- === map function
 -- ===
-
+-- Kotlin lint 快捷键（仅在 Kotlin 文件中生效）
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "kotlin",
+  callback = function()
+    local ok, kotlin_lint = pcall(require, "core.kotlin_lint")
+    if ok then
+      kotlin_lint.setup()
+    end
+  end,
+})
 local function mapkey(mode, lhs, rhs, opts)
 	vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", { silent = true, nowait = true }, opts or {}))
 end

@@ -19,6 +19,7 @@ local formatters_by_ft = {
 	zsh = { "shfmt" },
 	typescript = { "deno_fmt" },
 	javascript = { "deno_fmt" },
+	kotlin = { "ktlint" },
 	-- markdown = { "deno_fmt_markdown" },
 }
 

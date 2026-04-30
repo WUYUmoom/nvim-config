@@ -21,11 +21,12 @@ vim.o.ignorecase = true
 -- /搜索时智能大小写
 vim.o.smartcase = true
 -- 共享系统剪切
-vim.o.clipboard = 'unnamedplus'
+--vim.o.clipboard = 'unnamedplus'
 -- 设置<tab>键
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.softtabstop = 4
+vim.o.expandtab = true
 -- 随文件自动更改当前路径
 vim.o.autochdir = true
 -- 在光标上方和下方保留的最小屏幕行数
@@ -181,5 +182,15 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.notify("✅ Kotlin 模板已应用到: " .. filename, vim.log.levels.INFO)
 	end,
 })
+-- Kotlin 增强高亮
+local ok, kotlin_highlights = pcall(require, "core.kotlin_highlights")
+if ok then
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "kotlin",
+    callback = function()
+      kotlin_highlights.setup()
+    end,
+  })
+end
 -- 主题颜色
 vim.cmd.colorscheme("catppuccin")
