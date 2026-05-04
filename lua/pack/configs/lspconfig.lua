@@ -100,7 +100,16 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 			})
 
 			-- Kotlin (kotlin_language_server)
-			vim.lsp.config("kotlin_language_server", {
+			vim.lsp.config("kotlin-lsp", {
+				cmd = { "kotlin-lsp", "--stdio" },
+				root_markers = {
+					"settings.gradle",
+					"settings.gradle.kts",
+					"pom.xml",
+					"build.gradle",
+					"build.gradle.kts",
+					"workspace.json",
+				},
 				settings = {
 					codelens = {
 						enable = true,
@@ -109,6 +118,15 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 						enable = true,
 					},
 				},
+			})
+			-- === 自动整理 Kotlin Import ===
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				pattern = "*.kt",
+				callback = function()
+					vim.lsp.buf.code_action({
+						context = { only = { "source.organizeImports" } },
+					})
+				end,
 			})
 
 			-- Go (gopls)
@@ -135,4 +153,3 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 		end)
 	end
 })
-
