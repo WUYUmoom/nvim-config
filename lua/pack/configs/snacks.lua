@@ -5,17 +5,23 @@ local P = {
 	name = "snacks.nvim",
 }
 
+local map = require("core.keymap")
+map:lua("<c-g>", "Snacks.lazygit()")
+map:lua("gr", "Snacks.picker.lsp_references()")
+
+-- 修正：直接使用 Neovim 内置的 LSP 重命名功能，绕过 Snacks 的 API 问题
+map:lua("<leader>rn", "vim.lsp.buf.rename()")
 PackUtils.load(P, function()
 	require("snacks").setup({
 		image = {},
 		lazygit = {
-			theme = {}, -- 【修改】设置为空表，阻止插件生成默认主题文件
+			theme = {}, 
 		},
-		notifier = {}, -- 替代了folke/noice.nvim插件的rcarriga/nvim-notify依赖
+		notifier = {}, 
 		picker = {
 			win = {
 				input = {
-					keys = { -- Esc直接关闭窗口，不进入normal模式
+					keys = { 
 						["<Esc>"] = { "close", mode = { "n", "i" } },
 						["<c-e>"] = { "list_down", mode = { "i", "n" } },
 						["<c-u>"] = { "list_up", mode = { "i", "n" } },
@@ -23,6 +29,8 @@ PackUtils.load(P, function()
 				}
 			}
 		},
+		-- 新增：显式启用 rename 模块
+		rename = {},
 	})
 end)
 
