@@ -5,7 +5,8 @@ if vim.g.vscode then return end
 local arch = jit and jit.arch or ""
 local is_arm = arch:match("arm") or arch:match("aarch64")
 
-local servers = { "lua_ls", "rust_analyzer", "denols", "kotlin_language_server" }
+local servers = { "lua_ls", "rust_analyzer", "denols", "kotlin_lsp" }
+
 if not is_arm then
 	vim.list_extend(servers, { "marksman", "svelte", "cssls", "html" })
 end
@@ -99,9 +100,12 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 				},
 			})
 
-			-- Kotlin (kotlin_language_server)
+			-- Kotlin LSP 配置
 			vim.lsp.config("kotlin-lsp", {
-				cmd = { "kotlin-lsp", "--stdio" },
+				cmd = {
+					"/home/linuxbrew/.linuxbrew/bin/kotlin-lsp-wrapper", 
+					"--stdio"
+				},
 				root_markers = {
 					"settings.gradle",
 					"settings.gradle.kts",
@@ -117,7 +121,19 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 					inlayHints = {
 						enable = true,
 					},
+					-- 添加补全相关设置
+					completion = {
+						insertMode = "insert",
+						snippetSupport = true,
+					}
 				},
+				-- 添加 on_attach 函数处理补全
+				on_attach = function(client, bufnr)
+					-- 设置补全时的括号自动添加
+					vim.api.nvim_buf_set_keymap(bufnr, 'i', '<CR>',
+						'<C-r>=luaeval("require(\'cmp\').confirm()")<CR>', { noremap = true, silent = true })
+				end,
+				capabilities = vim.lsp.protocol.make_client_capabilities()
 			})
 			-- === 自动整理 Kotlin Import ===
 			vim.api.nvim_create_autocmd("BufWritePre", {
