@@ -1,6 +1,8 @@
 -- === LSP 核心配置 (Lspconfig + Mason) ===
 if vim.g.vscode then return end
-
+-- 强制设置 Java 环境
+vim.env.JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
+vim.env.PATH = vim.env.JAVA_HOME .. '/bin:' .. vim.env.PATH
 -- 环境探测：判断 CPU 架构，决定安装哪些 LSP
 local arch = jit and jit.arch or ""
 local is_arm = arch:match("arm") or arch:match("aarch64")
@@ -78,9 +80,6 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
                 },
             })
 
-            -- === 特定 LSP 配置 (使用 Neovim 0.11+ vim.lsp.config 语法) ===
-
-            -- Python (pylsp) + uv 虚拟环境自适应
             -- Kotlin 特定的诊断配置（更严格）
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = "kotlin",
@@ -100,6 +99,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
                     vim.notify("✅ Kotlin 严格诊断模式已启用", vim.log.levels.INFO)
                 end,
             })
+            -- === 特定 LSP 配置 (使用 Neovim 0.11+ vim.lsp.config 语法) ===
             vim.lsp.config("pylsp", {
                 on_init = function(client)
                     -- 1. 安全获取 root_dir
@@ -128,50 +128,50 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
                 },
             })
 
-			-- Kotlin LSP 配置
-			vim.lsp.config("kotlin-lsp", {
-				cmd = {
-					"/home/linuxbrew/.linuxbrew/bin/kotlin-lsp-wrapper",
-					"--stdio"
-				},
-				root_markers = {
-					"settings.gradle",
-					"settings.gradle.kts",
-					"pom.xml",
-					"build.gradle",
-					"build.gradle.kts",
-					"workspace.json",
-				},
-				settings = {
-					codelens = {
-						enable = true,
-					},
-					inlayHints = {
-						enable = true,
-					},
-					-- 添加补全相关设置
-					completion = {
-						insertMode = "insert",
-						snippetSupport = true,
-					}
-				},
-				-- 添加 on_attach 函数处理补全
-				on_attach = function(client, bufnr)
-					-- 设置补全时的括号自动添加
-					vim.api.nvim_buf_set_keymap(bufnr, 'i', '<CR>',
-						'<C-r>=luaeval("require(\'cmp\').confirm()")<CR>', { noremap = true, silent = true })
-				end,
-				capabilities = vim.lsp.protocol.make_client_capabilities()
-			})
-			-- === 自动整理 Kotlin Import ===
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.kt",
-				callback = function()
-					vim.lsp.buf.code_action({
-						context = { only = { "source.organizeImports" } },
-					})
-				end,
-			})
+            -- Kotlin LSP 配置
+            vim.lsp.config("kotlin-lsp", {
+                cmd = {
+                    "/home/linuxbrew/.linuxbrew/Caskroom/kotlin-lsp/262.4739.0/kotlin-server-262.4739.0/bin/kotlin-lsp.sh",
+                    "--stdio"
+                },
+                root_markers = {
+                    "settings.gradle",
+                    "settings.gradle.kts",
+                    "pom.xml",
+                    "build.gradle",
+                    "build.gradle.kts",
+                    "workspace.json",
+                },
+                settings = {
+                    codelens = {
+                        enable = true,
+                    },
+                    inlayHints = {
+                        enable = true,
+                    },
+                    -- 添加补全相关设置
+                    completion = {
+                        insertMode = "insert",
+                        snippetSupport = true,
+                    }
+                },
+                -- 添加 on_attach 函数处理补全
+                on_attach = function(client, bufnr)
+                    -- 设置补全时的括号自动添加
+                    vim.api.nvim_buf_set_keymap(bufnr, 'i', '<CR>',
+                        '<C-r>=luaeval("require(\'cmp\').confirm()")<CR>', { noremap = true, silent = true })
+                end,
+                capabilities = vim.lsp.protocol.make_client_capabilities()
+            })
+            -- === 自动整理 Kotlin Import ===
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                pattern = "*.kt",
+                callback = function()
+                    vim.lsp.buf.code_action({
+                        context = { only = { "source.organizeImports" } },
+                    })
+                end,
+            })
             -- Go (gopls)
             vim.lsp.config("gopls", {
                 settings = {
@@ -193,6 +193,10 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
             for _, server in ipairs(servers) do
                 vim.lsp.enable(server)
             end
+            vim.diagnostic.config({
+                virtual_text = true,
+                update_in_insert = true,
+            })
         end)
     end
 })

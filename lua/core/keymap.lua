@@ -1,16 +1,6 @@
 -- ===
 -- === map function
 -- ===
--- Kotlin lint 快捷键（仅在 Kotlin 文件中生效）
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "kotlin",
-  callback = function()
-    local ok, kotlin_lint = pcall(require, "core.kotlin_lint")
-    if ok then
-      kotlin_lint.setup()
-    end
-  end,
-})
 local function mapkey(mode, lhs, rhs, opts)
 	vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", { silent = true, nowait = true }, opts or {}))
 end
@@ -172,60 +162,6 @@ mapkey("x", ">", ">gv")
 mapkey("x", "<s-tab>", "<gv")
 mapkey("x", "<tab>", ">gv")
 
--- ===
--- === 批量替换 (修复 Shell 逃逸与正则符冲突版)
--- ===
-
--- 替换当前目录及子目录下所有文件内容
-local function search_and_replace()
-	return function()
-		local search_text = vim.fn.input("Search for: ")
-		if search_text == "" then return end
-		local replace_text = vim.fn.input("Replace with: ")
-
-		-- 为 sed 转义分隔符 '/'，防止 s/a/b/g 出现语法错误
-		local sed_search = vim.fn.escape(search_text, '/')
-		local sed_replace = vim.fn.escape(replace_text, '/')
-
-		-- 利用内核自动转义并生成安全的单引号包裹
-		local grep_arg = vim.fn.shellescape(search_text)
-		local sed_arg = vim.fn.shellescape('s/' .. sed_search .. '/' .. sed_replace .. '/g')
-
-		-- 执行拼接：grep 增加 -F 参数表示“固定字符串”，彻底无视正则符号(如括号、星号)
-		local cmd = '!grep -rlF ' .. grep_arg .. ' ./ | xargs sed -i ' .. sed_arg
-		vim.cmd(cmd)
-		-- 强制 Neovim 检查文件在外部的改动并立即刷新 UI
-		vim.cmd("checktime")
-		print("\n✅ Replaced occurrences of '" .. search_text .. "' in workspace.")
-	end
-end
-
--- 替换当前文件内容
-local function search_and_replace_current_file()
-	return function()
-		local search_text = vim.fn.input("Search for in current file: ")
-		if search_text == "" then return end
-		local replace_text = vim.fn.input("Replace with: ")
-
-		local sed_search = vim.fn.escape(search_text, '/')
-		local sed_replace = vim.fn.escape(replace_text, '/')
-		local sed_arg = vim.fn.shellescape('s/' .. sed_search .. '/' .. sed_replace .. '/g')
-
-		-- % 代表当前文件
-		local cmd = '!sed -i ' .. sed_arg .. ' %'
-		vim.cmd(cmd)
-
-		vim.cmd("checktime")
-		print("\n✅ Replaced occurrences in current file.")
-	end
-end
-
-maplua("n", "<leader>sa", search_and_replace(), "替换当前目录及子目录下所有文件内容")
-maplua("n", "<leader>sr", search_and_replace_current_file(), "替换当前文件内容")
-
--- ===
--- === 临时“存档”文件当前的版本，并与后续的修改进行 diff 对比
--- ===
 
 -- 创建 :DiffOrig 自定义命令，这个命令会打开一个垂直分屏，加载当前文件存盘时的版本，并启动 diff 模式
 vim.api.nvim_create_user_command(
