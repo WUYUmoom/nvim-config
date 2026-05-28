@@ -182,5 +182,15 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.notify("✅ Kotlin 模板已应用到: " .. filename, vim.log.levels.INFO)
 	end,
 })
+-- Kotlin 增强高亮
+local ok, kotlin_highlights = pcall(require, "core.kotlin_highlights")
+if ok then
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "kotlin",
+    callback = function()
+      kotlin_highlights.setup()
+    end,
+  })
+end
 -- 主题颜色
 vim.cmd.colorscheme("catppuccin")
