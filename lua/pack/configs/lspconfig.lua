@@ -131,37 +131,23 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
             -- Kotlin LSP 配置
             vim.lsp.config("kotlin-lsp", {
                 cmd = {
-                    "/home/linuxbrew/.linuxbrew/Caskroom/kotlin-lsp/262.4739.0/kotlin-server-262.4739.0/bin/kotlin-lsp.sh",
-                    "--stdio"
-                },
+                    "-Xms256m",  -- 初始堆内存
+                    "-Xmx2g",    -- 最大堆内存（根据项目大小调整，2-4g 比较合理）
+                    "-XX:+UseG1GC",  -- 使用 G1 垃圾回收器
+                    "-XX:MaxGCPauseMillis=20",  -- 控制 GC 停顿时间
+                    "-XX:+TieredCompilation",  -- 启用分层编译
+                    "-XX:+UseStringDeduplication",
+                    "kotlin-lsp",
+                    "--stdio" },
                 root_markers = {
-                    "settings.gradle",
-                    "settings.gradle.kts",
-                    "pom.xml",
-                    "build.gradle",
-                    "build.gradle.kts",
-                    "workspace.json",
-                },
-                settings = {
-                    codelens = {
-                        enable = true,
-                    },
-                    inlayHints = {
-                        enable = true,
-                    },
-                    -- 添加补全相关设置
-                    completion = {
-                        insertMode = "insert",
-                        snippetSupport = true,
-                    }
-                },
-                -- 添加 on_attach 函数处理补全
-                on_attach = function(client, bufnr)
-                    -- 设置补全时的括号自动添加
-                    vim.api.nvim_buf_set_keymap(bufnr, 'i', '<CR>',
-                        '<C-r>=luaeval("require(\'cmp\').confirm()")<CR>', { noremap = true, silent = true })
-                end,
-                capabilities = vim.lsp.protocol.make_client_capabilities()
+		            "settings.gradle", -- Gradle (multi-project)
+		            "settings.gradle.kts", -- Gradle (multi-project)
+		            "pom.xml", -- Maven
+		            "build.gradle", -- Gradle
+		            "build.gradle.kts", -- Gradle
+	        	    "workspace.json", -- Used to integrate your own build system
+	            },
+                filetypes = { "kotlin" },    -- 明确限制文件类型
             })
             -- === 自动整理 Kotlin Import ===
             vim.api.nvim_create_autocmd("BufWritePre", {

@@ -31,8 +31,8 @@ mapkey({ "n", "x", "o" }, "-", "Nzz")
 mapcmd("<leader><cr>", "nohlsearch")
 
 -- 保存和退出
-mapkey({ "n", "x", "o" }, "<C-s>", ":wall<cr>")
-mapkey({ "n", "x", "o" }, "<C-q>", ":qall<cr>")
+mapkey({ "n", "x", "o" }, "<C-s>", ":wall!<cr>")
+mapkey({ "n", "x", "o" }, "<C-q>", ":qall!<cr>")
 
 
 
